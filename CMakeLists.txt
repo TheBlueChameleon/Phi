@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.5)
 # lanugage definition
 
 project(Phi
-    VERSION 1.0.0
+    VERSION 0.1.0
     LANGUAGES CXX
 )
 
@@ -75,6 +75,9 @@ set_target_properties(PhiPhysics-lib PROPERTIES
     SOVERSION ${PROJECT_VERSION}
     PUBLIC_HEADER src/physics/physics.h
 )
+
+# uncomment this if your target does not support AVX CPU instructions
+ target_compile_definitions(PhiPhysics-lib PUBLIC NO_AVX_ACCELERATION)
 
 # ............................................................................ #
 # showcase code

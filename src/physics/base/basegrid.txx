@@ -30,7 +30,7 @@ namespace Physics
     BaseGrid<T>::BaseGrid(PixelCoordinates size, Real gridConstant) :
         size(size), gridConstant(gridConstant)
     {
-        if (size.x <= 0 || size.y <= 0)
+        if (size.x < 0 || size.y < 0)
         {
             throw DimensionError("Negative Grid Size");
         }

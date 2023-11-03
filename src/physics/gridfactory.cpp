@@ -4,6 +4,8 @@
 
 namespace Physics
 {
+    const PixelCoordinates GridFactory::USE_DEFAULT = PixelCoordinates(-1, -1);
+
     GridFactory::GridFactory(PixelCoordinates size, Real gridConstant) :
         size(size), gridConstant(gridConstant)
     {}
@@ -11,6 +13,22 @@ namespace Physics
     PotentialGrid GridFactory::makeWorld() const
     {
         return PotentialGrid(size, gridConstant);
+    }
+
+    PotentialGrid GridFactory::makeOverlayAtConstantLevel(Real level, PixelCoordinates size) const
+    {
+        PotentialGrid result;
+        if (size == USE_DEFAULT)
+        {
+            result = PotentialGrid(this->size, gridConstant, level);
+        }
+        else
+        {
+            result = PotentialGrid(size, gridConstant, level);
+        }
+        result.setOrigin(result.getPixelSize() / 2);
+
+        return result;
     }
 
     Pixel getSizeLimitedToDoubleWorldSize(const Pixel cutoffSize, const Pixel worldSize)
@@ -27,7 +45,7 @@ namespace Physics
         PixelCoordinates createdSize = {getSizeLimitedToDoubleWorldSize(cutoffSize, size.x),
                                         getSizeLimitedToDoubleWorldSize(cutoffSize, size.y)
                                        };
-        PixelCoordinates quadrantSize = {createdSize.x / 2, createdSize.y / 2};
+        PixelCoordinates quadrantSize = createdSize / 2;
         PotentialGrid result = PotentialGrid(createdSize, gridConstant);
         result.setOrigin(quadrantSize);
 
