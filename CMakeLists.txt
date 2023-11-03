@@ -11,7 +11,15 @@ project(Phi
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set (CMAKE_CXX_FLAGS "-mavx512f")
+# set this to NO if your target does not support AVX CPU instructions
+set (ENABLE_AVX YES)
+
+if (ENABLE_AVX)
+    set (CMAKE_CXX_FLAGS "-mavx512f")
+    message("AVX EXTENSION ENABLED")
+else()
+    message("AVX EXTENSION DISABLED")
+endif()
 
 # ============================================================================ #
 # unit test framework
@@ -78,8 +86,10 @@ set_target_properties(PhiPhysics-lib PROPERTIES
     PUBLIC_HEADER src/physics/physics.h
 )
 
-# uncomment this if your target does not support AVX CPU instructions
-# target_compile_definitions(PhiPhysics-lib PUBLIC NO_AVX_ACCELERATION)
+if (NOT ENABLE_AVX)
+    target_compile_definitions(PhiPhysics-lib PUBLIC NO_AVX_ACCELERATION)
+endif()
+
 
 # ............................................................................ #
 # showcase code
