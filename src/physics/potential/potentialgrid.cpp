@@ -52,8 +52,10 @@ namespace Physics
         PixelCoordinates startIdxs = origin + at - potential.origin + minIdxs;
 
 #ifdef NO_AVX_ACCELERATION
+        std::cout << "slow" << std::endl;
         imposeImpl_noAcceleration(potential, minIdxs, maxIdxs, startIdxs);
 #else
+        std::cout << "fast" << std::endl;
         imposeImpl_avxAccelerated(potential, minIdxs, maxIdxs, startIdxs);
 #endif
     }
@@ -63,9 +65,10 @@ namespace Physics
         return y * w + x;
     }
 
+
     void PotentialGrid::imposeImpl_noAcceleration(const PotentialGrid& potential, const PixelCoordinates& minIdxs, const PixelCoordinates& maxIdxs, const PixelCoordinates& startIdxs)
     {
-        const auto width = maxIdxs.x - minIdxs.x;
+        const auto width = maxIdxs.x - minIdxs.x + 1;
         const auto potBegin  = potential.values.begin();
         const auto selfBegin = this->values.begin();
 
@@ -82,10 +85,10 @@ namespace Physics
                           );
         }
     }
-
+#ifndef NO_AVX_ACCELERATION
     void PotentialGrid::imposeImpl_avxAccelerated(const PotentialGrid& potential, const PixelCoordinates& minIdxs, const PixelCoordinates& maxIdxs, const PixelCoordinates& startIdxs)
     {
-        const auto width = maxIdxs.x - minIdxs.x;
+        const auto width = maxIdxs.x - minIdxs.x + 1;
         const auto potBegin  = potential.values.data();
         const auto selfBegin = this->values.data();
 
@@ -114,7 +117,7 @@ namespace Physics
             {
                 if (x + 8 >= width)
                 {
-                    const auto presentCount = width - x + 1;
+                    const auto presentCount = width - x;
                     mask = (1 << presentCount) - 1;
                 }
                 a = _mm512_maskz_expandloadu_pd(mask, potBegin + from + x);
@@ -126,6 +129,7 @@ namespace Physics
         }
 
     }
+#endif
 
     std::string PotentialGrid::to_string() const
     {
