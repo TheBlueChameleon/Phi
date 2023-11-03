@@ -2,6 +2,8 @@
 #include <iostream>
 #include <ranges>
 
+#include <immintrin.h>
+
 #include "potentialgrid.h"
 
 namespace Physics
@@ -52,7 +54,7 @@ namespace Physics
 #ifdef NO_AVX_ACCELERATION
         imposeImpl_noAcceleration(potential, minIdxs, maxIdxs, startIdxs);
 #else
-        imposeImpl_avxAccelerated();
+        imposeImpl_avxAccelerated(potential, minIdxs, maxIdxs, startIdxs);
 #endif
     }
 
@@ -81,9 +83,49 @@ namespace Physics
         }
     }
 
-    void PotentialGrid::imposeImpl_avxAccelerated() {}
+    void PotentialGrid::imposeImpl_avxAccelerated(const PotentialGrid& potential, const PixelCoordinates& minIdxs, const PixelCoordinates& maxIdxs, const PixelCoordinates& startIdxs)
+    {
+        const auto width = maxIdxs.x - minIdxs.x;
+        const auto potBegin  = potential.values.data();
+        const auto selfBegin = this->values.data();
 
+        /* This uses _mm512_maskz_expandloadu_pd(mask, mem_adr) to get values from memory to the AVX registers.
+         * Here ...
+         *   mem_adr is the source address from which to copy the values
+         *   mask    is a bit mask indicating which values to actually load
+         *   returns the load result
+         * https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=0,135,140,3772,2925&cats=Load&techs=AVX_512
+         */
+        __m512d  sum, a, b;
+        __mmask8 mask = 0b11111111;
 
+        /* Then, the loaded values are added with _mm512_add_pd(a, b), where a, b are of type __m512d */
+
+        /* Finally, write back the sums with _mm512_mask_storeu_pd(void* base_addr, __mmask8 k, __m512d a)
+         * Here, the parameters are analogous to the load operation
+         */
+
+        for (auto y = minIdxs.y; y <= maxIdxs.y; ++y)
+        {
+            const auto from = to_index(minIdxs.x, y, potential.size.x);
+            const auto to   = to_index(startIdxs.x, startIdxs.y + y - minIdxs.y, size.x);
+
+            for (auto x = 0; x <= width; x+=8)
+            {
+                if (x + 8 >= width)
+                {
+                    const auto presentCount = width - x + 1;
+                    mask = (1 << presentCount) - 1;
+                }
+                a = _mm512_maskz_expandloadu_pd(mask, potBegin + from + x);
+                b = _mm512_maskz_expandloadu_pd(mask, selfBegin + to + x);
+                sum = _mm512_add_pd(a, b);
+                _mm512_mask_storeu_pd(selfBegin + to + x, mask, sum);
+            }
+            mask = 0b11111111;
+        }
+
+    }
 
     std::string PotentialGrid::to_string() const
     {
