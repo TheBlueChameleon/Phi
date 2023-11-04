@@ -9,43 +9,43 @@ namespace Coords
     // class methods
 
     // todo: optimize in terms of intrinsics
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     Coordinates<T> Coordinates<T>::operator-() const
     {
         return {-this->x, -this->y};
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     Coordinates<T> Coordinates<T>::operator+(const Coordinates<T>& rhs) const
     {
         return {this->x + rhs.x, this->y + rhs.y};
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     Coordinates<T> Coordinates<T>::operator-(const Coordinates<T>& rhs) const
     {
         return {this->x - rhs.x, this->y - rhs.y};
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     Coordinates<T> Coordinates<T>::operator*(const Real rhs) const
     {
         return {static_cast<T>(this->x * rhs), static_cast<T>(this->y * rhs)};
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     Coordinates<T> Coordinates<T>::operator/(const Real rhs) const
     {
         return {static_cast<T>(this->x / rhs), static_cast<T>(this->y / rhs)};
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     bool Coordinates<T>::operator==(const Coordinates<T>& rhs) const
     {
         return this->x == rhs.x && this->y == rhs.y;
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     std::string Coordinates<T>::to_string() const
     {
         return "(" + std::to_string(this->x) + ", " + std::to_string(this->y) + ")";
@@ -54,19 +54,19 @@ namespace Coords
     // ====================================================================== //
     // helper functions
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     Coordinates<T> min(const Coordinates<T>& a, const Coordinates<T>& b)
     {
         return { std::min(a.x, b.x), std::min(a.y, b.y) };
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     Coordinates<T> max(const Coordinates<T>& a, const Coordinates<T>& b)
     {
         return { std::max(a.x, b.x), std::max(a.y, b.y) };
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     std::array<T, 4> getRectSorted(const Coordinates<T>& boundary1, const Coordinates<T>& boundary2)
     {
         T x1 = boundary1.x;
@@ -82,7 +82,7 @@ namespace Coords
         return {x1, x2, y1, y2};
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     bool isWithin(const Coordinates<T>& point, const Coordinates<T>& boundary1, const Coordinates<T>& boundary2)
     {
         const auto [x1, x2, y1, y2] = getRectSorted(boundary1, boundary2);

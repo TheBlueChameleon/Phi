@@ -1,9 +1,11 @@
 #include <iostream>
 
+#include "base/base.h"
+#include "coords/coords.h"
 #include "physics/physics.h"
-#include "ui-base/base.h"
+#include "ui-base/uibase.h"
 
-int main()
+void show_physics()
 {
     using namespace Physics;
 
@@ -20,8 +22,17 @@ int main()
 
     //    std::cout << pot.to_string() << std::endl;
     std::cout << world.to_string() << std::endl;
+}
 
-    UiBase::foo();
+void show_uibase()
+{
+    UiBase::mainloop();
+}
+
+int main()
+{
+    //    show_physics();
+    show_uibase();
 
     return 0;
 }

@@ -21,12 +21,22 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
+
 # install these with
 #  sudo apt install libsdl2-dev
 #  sudo apt install libsdl2-image-dev
 #  sudo apt install libsdl2-ttf-dev
 
-include_directories(${SDL2_INCLUDE_DIRS})
+# auto detection did not work on my machine, so define the lib flags manually ...
+set(SDL2_LIBRARY_COMPONENTS "-lSDL2;-lSDL2_image;-lSDL2_ttf")
+
+#link_libraries(${SDL2_LINKER_FLAGS})
+
+include_directories(
+    ${SDL2_INCLUDE_DIRS}
+    ${SDL2_IMAGE_INCLUDE_DIRS}
+)
 
 # ============================================================================ #
 # unit test framework
@@ -84,9 +94,7 @@ target_include_directories(Phi-base PUBLIC
 
 add_library(Phi-coords STATIC
     src/coords/coords.h
-
     src/coords/coordinates.h    src/coords/coordinates.txx  src/coords/coordinates.cpp
-
     src/coords/grid.h
     src/coords/basegrid.h       src/coords/basegrid.txx     src/coords/basegrid.cpp
 )
@@ -103,19 +111,12 @@ target_link_libraries(Phi-coords
 
 add_library(Phi-physics STATIC
     src/physics/physics.h
-
     src/physics/gridfactory.h src/physics/gridfactory.cpp
     src/physics/potential/potentialgrid.h src/physics/potential/potentialgrid.cpp
 )
 
 target_include_directories(Phi-physics PUBLIC
     src/
-)
-
-set_target_properties(Phi-physics PROPERTIES
-    VERSION   ${PROJECT_VERSION}
-    SOVERSION ${PROJECT_VERSION}
-    PUBLIC_HEADER src/physics/physics.h
 )
 
 if (NOT ENABLE_AVX)
@@ -126,7 +127,8 @@ endif()
 
 add_library(Phi-uibase STATIC
     src/ui-base/uibase.h
-    src/ui-base/base.h src/ui-base/base.cpp
+    src/ui-base/constants.h src/ui-base/constants.cpp
+    src/ui-base/sdlbase.h src/ui-base/sdlbase.cpp
 )
 
 target_include_directories(Phi-uibase PUBLIC
@@ -135,13 +137,20 @@ target_include_directories(Phi-uibase PUBLIC
 
 target_link_libraries(Phi-uibase
     Phi-base
+    ${SDL2_LIBRARY_COMPONENTS}
 )
+
 
 # ============================================================================ #
 # executable module definition
 
 add_executable(Phi-game
     src/main.cpp
+)
+
+set_target_properties(Phi-game PROPERTIES
+    VERSION   ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION}
 )
 
 target_include_directories(Phi-game PUBLIC
@@ -153,7 +162,6 @@ target_link_libraries(Phi-game
     Phi-coords
     Phi-physics
     Phi-uibase
-    ${SDL2_LIBRARIES}
 )
 
 # ............................................................................ #
@@ -190,5 +198,9 @@ else()
     message(STATUS "AVX EXTENSION DISABLED")
 endif()
 
-message(VERBOSE CMAKE_INSTALL_LIBDIR="${CMAKE_INSTALL_LIBDIR}")
 message(VERBOSE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+message(VERBOSE CMAKE_INSTALL_LIBDIR="${CMAKE_INSTALL_LIBDIR}")
+message(VERBOSE SDL2_LIBRARIES = "${SDL2_LIBRARIES}")
+message(VERBOSE SDL2_INCLUDE_DIRS="${SDL2_INCLUDE_DIRS}")
+message(VERBOSE SDL2_IMAGE_LIBRARIES = "${SDL2_IMAGE_LIBRARIES}")
+message(VERBOSE SDL2_IMAGE_INCLUDE_DIRS="${SDL2_IMAGE_INCLUDE_DIRS}")

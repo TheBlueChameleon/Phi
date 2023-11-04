@@ -5,15 +5,17 @@
 #include <concepts>
 #include <string>
 
+#include "base/base.h"
+
 namespace Coords
 {
-    template<typename T, typename E, typename O>
-    concept EitherOr = std::is_convertible_v<T, E> || std::is_convertible_v<T, O>;
-
     using Pixel = int;
     using Real = double;
 
-    template<EitherOr<Pixel, Real> T>
+    template<typename T>
+    concept PixelOrReal = Base::EitherOr<T, Pixel, Real>;
+
+    template<PixelOrReal T>
     struct Coordinates
     {
         T x;
@@ -35,16 +37,16 @@ namespace Coords
     using Scalar = Real;
     using Vector = RealCoordinates;
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     Coordinates<T> min(const Coordinates<T>& a, const Coordinates<T>& b);
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     Coordinates<T> max(const Coordinates<T>& a, const Coordinates<T>& b);
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     std::array<T, 4> getRectSorted(const Coordinates<T>& boundary1, const Coordinates<T>& boundary2);
 
-    template<EitherOr<Pixel, Real> T>
+    template<PixelOrReal T>
     bool isWithin(const Coordinates<T>& point, const Coordinates<T>& boundary1, const Coordinates<T>& boundary2);
 
     PixelCoordinates toPixelCoordinates(const RealCoordinates& c, Real gridConstant);

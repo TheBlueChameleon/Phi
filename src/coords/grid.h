@@ -1,11 +1,15 @@
 #ifndef GRID_H
 #define GRID_H
 
+#include "base/base.h"
 #include "coordinates.h"
 
 namespace Coords
 {
-    template<EitherOr<Scalar, Vector> T>
+    template<typename T>
+    concept EitherScalarOrVector = Base::EitherOr<T, Scalar, Vector>;
+
+    template<EitherScalarOrVector T>
     struct Grid
     {
         virtual PixelCoordinates getPixelSize() const = 0;

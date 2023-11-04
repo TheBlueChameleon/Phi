@@ -4,13 +4,16 @@
 #include <exception>
 #include <stdexcept>
 
-class PhiError : public std::runtime_error
+namespace Base
 {
-    public:
-        PhiError(const std::string& message);
-};
+    class PhiError : public std::runtime_error
+    {
+        public:
+            PhiError(const std::string& message);
+    };
+}
 
-#define DEF_ERROR(__name__) class __name__ : public PhiError { public: __name__(const std::string& message); }
+#define DEF_ERROR(__name__) class __name__ : public Base::PhiError { public: __name__(const std::string& message); }
 
 namespace Coords
 {
@@ -20,6 +23,11 @@ namespace Coords
 
 namespace Physics
 {
+}
+
+namespace UiBase
+{
+    DEF_ERROR(SdlError);
 }
 
 #undef DEF_ERROR

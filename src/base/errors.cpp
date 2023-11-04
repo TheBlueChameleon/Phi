@@ -1,8 +1,11 @@
 #include "errors.h"
 
-#define DEF_ERROR(__name__) __name__::__name__(const std::string& message) : PhiError(message) {}
+#define DEF_ERROR(__name__) __name__::__name__(const std::string& message) : Base::PhiError(message) {}
 
-PhiError::PhiError(const std::string& message) : std::runtime_error(message) {}
+namespace Base
+{
+    PhiError::PhiError(const std::string& message) : std::runtime_error(message) {}
+}
 
 namespace Coords
 {
@@ -12,4 +15,9 @@ namespace Coords
 
 namespace Physics
 {
+}
+
+namespace UiBase
+{
+    DEF_ERROR(SdlError);
 }

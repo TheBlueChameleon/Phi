@@ -15,7 +15,7 @@ namespace Physics
         std::fill(values.begin(), values.end(), level);
     }
 
-    template<EitherOr<Pixel, Real> T>
+    template<Coords::EitherScalarOrVector T>
     T negativeReLU(T x)
     {
         return x >= 0 ? 0 : - x;
@@ -52,10 +52,8 @@ namespace Physics
         PixelCoordinates startIdxs = origin + at - potential.origin + minIdxs;
 
 #ifdef NO_AVX_ACCELERATION
-        std::cout << "slow" << std::endl;
         imposeImpl_noAcceleration(potential, minIdxs, maxIdxs, startIdxs);
 #else
-        std::cout << "fast" << std::endl;
         imposeImpl_avxAccelerated(potential, minIdxs, maxIdxs, startIdxs);
 #endif
     }

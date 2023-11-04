@@ -1,6 +1,8 @@
 #ifndef UIBASE_H
 #define UIBASE_H
 
-#include "base.h"
+#include "constants.h"
+#include "sdlbase.h"
 
 #endif
+

@@ -7,7 +7,7 @@
 
 namespace Coords
 {
-    template<EitherOr<Scalar, Vector> T>
+    template<EitherScalarOrVector T>
     class BaseGrid : public Grid<T>
     {
         protected:
