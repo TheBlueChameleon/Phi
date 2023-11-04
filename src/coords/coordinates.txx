@@ -3,7 +3,7 @@
 
 #include "coordinates.h"
 
-namespace Physics
+namespace Coords
 {
     // ====================================================================== //
     // class methods

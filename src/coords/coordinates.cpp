@@ -1,6 +1,6 @@
 #include "coordinates.txx"
 
-namespace Physics
+namespace Coords
 {
     template struct Coordinates<Pixel>;
     template struct Coordinates<Real>;

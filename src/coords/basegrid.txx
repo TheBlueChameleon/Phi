@@ -3,9 +3,9 @@
 
 #include "basegrid.h"
 #include "coordinates.h"
-#include "errors.h"
+#include <base/base.h>
 
-namespace Physics
+namespace Coords
 {
 
     template<EitherOr<Scalar, Vector> T>

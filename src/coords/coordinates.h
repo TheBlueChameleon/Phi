@@ -5,7 +5,7 @@
 #include <concepts>
 #include <string>
 
-namespace Physics
+namespace Coords
 {
     template<typename T, typename E, typename O>
     concept EitherOr = std::is_convertible_v<T, E> || std::is_convertible_v<T, O>;

@@ -5,7 +5,7 @@
 
 #include "grid.h"
 
-namespace Physics
+namespace Coords
 {
     template<EitherOr<Scalar, Vector> T>
     class BaseGrid : public Grid<T>

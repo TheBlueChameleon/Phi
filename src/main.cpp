@@ -1,6 +1,7 @@
 #include <iostream>
 
-#include "physics.h"
+#include "physics/physics.h"
+#include "ui-base/base.h"
 
 int main()
 {
@@ -15,10 +16,12 @@ int main()
     std::cout << "pot  : " << pot.getPixelSize().to_string() << std::endl;
     std::cout << "con  : " << con.getPixelSize().to_string() << std::endl;
     //world.imposeAt(pot, PixelCoordinates {0, 0});
-    world.imposeAt(con, PixelCoordinates {3, 3});
+    world.imposeAt(con, PixelCoordinates {1, 1});
 
     //    std::cout << pot.to_string() << std::endl;
     std::cout << world.to_string() << std::endl;
+
+    UiBase::foo();
 
     return 0;
 }

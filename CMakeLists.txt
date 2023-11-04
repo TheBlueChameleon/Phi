@@ -14,12 +14,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # set this to NO if your target does not support AVX CPU instructions
 set (ENABLE_AVX YES)
 
-if (ENABLE_AVX)
-    set (CMAKE_CXX_FLAGS "-mavx512f")
-    message("AVX EXTENSION ENABLED")
-else()
-    message("AVX EXTENSION DISABLED")
-endif()
+# ============================================================================ #
+# SDL 2 parts
+
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+
+# install these with
+#  sudo apt install libsdl2-dev
+#  sudo apt install libsdl2-image-dev
+#  sudo apt install libsdl2-ttf-dev
+
+include_directories(${SDL2_INCLUDE_DIRS})
 
 # ============================================================================ #
 # unit test framework
@@ -63,51 +70,94 @@ include_directories(${GTestIncludes})
 # ============================================================================ #
 # library definition
 
-add_library(PhiPhysics-lib STATIC
+add_library(Phi-base STATIC
+    src/base/base.h
+
+    src/base/errors.h src/base/errors.cpp
+)
+
+target_include_directories(Phi-base PUBLIC
+    src/
+)
+
+# ............................................................................ #
+
+add_library(Phi-coords STATIC
+    src/coords/coords.h
+
+    src/coords/coordinates.h    src/coords/coordinates.txx  src/coords/coordinates.cpp
+
+    src/coords/grid.h
+    src/coords/basegrid.h       src/coords/basegrid.txx     src/coords/basegrid.cpp
+)
+
+target_include_directories(Phi-coords PUBLIC
+    src/
+)
+
+target_link_libraries(Phi-coords
+    Phi-base
+)
+
+# ............................................................................ #
+
+add_library(Phi-physics STATIC
     src/physics/physics.h
 
     src/physics/gridfactory.h src/physics/gridfactory.cpp
-
-    src/physics/base/errors.h src/physics/base/errors.cpp
-    src/physics/base/coordinates.h src/physics/base/coordinates.txx src/physics/base/coordinates.cpp
-    src/physics/base/grid.h
-    src/physics/base/basegrid.h src/physics/base/basegrid.txx src/physics/base/basegrid.cpp
-
     src/physics/potential/potentialgrid.h src/physics/potential/potentialgrid.cpp
 )
 
-target_include_directories(PhiPhysics-lib PUBLIC
-    src/physics/
+target_include_directories(Phi-physics PUBLIC
+    src/
 )
 
-set_target_properties(PhiPhysics-lib PROPERTIES
+set_target_properties(Phi-physics PROPERTIES
     VERSION   ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION}
     PUBLIC_HEADER src/physics/physics.h
 )
 
 if (NOT ENABLE_AVX)
-    target_compile_definitions(PhiPhysics-lib PUBLIC NO_AVX_ACCELERATION)
+    target_compile_definitions(Phi-physics PUBLIC NO_AVX_ACCELERATION)
 endif()
 
-
 # ............................................................................ #
-# showcase code
 
-add_executable(PhiPhysics-showcase
+add_library(Phi-uibase STATIC
+    src/ui-base/uibase.h
+    src/ui-base/base.h src/ui-base/base.cpp
+)
+
+target_include_directories(Phi-uibase PUBLIC
+    src/
+)
+
+target_link_libraries(Phi-uibase
+    Phi-base
+)
+
+# ============================================================================ #
+# executable module definition
+
+add_executable(Phi-game
     src/main.cpp
 )
 
-target_include_directories(PhiPhysics-showcase PUBLIC
-    src/physics/
+target_include_directories(Phi-game PUBLIC
+    src/
 )
 
-target_link_libraries(PhiPhysics-showcase
-    PhiPhysics-lib
+target_link_libraries(Phi-game
+    Phi-base
+    Phi-coords
+    Phi-physics
+    Phi-uibase
+    ${SDL2_LIBRARIES}
 )
 
 # ............................................................................ #
-# test code
+# test module
 
 add_executable(Phi-unittest
     unittest/main.cpp
@@ -125,11 +175,20 @@ target_include_directories(Phi-unittest
 )
 target_link_libraries(Phi-unittest
     PRIVATE Threads::Threads
-    PRIVATE PhiPhysics-lib
+    PRIVATE Phi-base
+    PRIVATE Phi-coords
+    PRIVATE Phi-physics
 )
 
 # ============================================================================ #
-# install
+# information feedback
 
-message(CMAKE_INSTALL_LIBDIR="${CMAKE_INSTALL_LIBDIR}")
-message(PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+if (ENABLE_AVX)
+    set (CMAKE_CXX_FLAGS "-mavx512f")
+    message(STATUS "AVX EXTENSION ENABLED")
+else()
+    message(STATUS "AVX EXTENSION DISABLED")
+endif()
+
+message(VERBOSE CMAKE_INSTALL_LIBDIR="${CMAKE_INSTALL_LIBDIR}")
+message(VERBOSE PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")

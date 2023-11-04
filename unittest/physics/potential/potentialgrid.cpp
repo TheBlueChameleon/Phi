@@ -4,7 +4,7 @@
 #include <gmock/gmock-matchers.h>
 using namespace testing;
 
-#include "gridfactory.h"
+#include "physics/gridfactory.h"
 using namespace Physics;
 
 class PotentialFixture : public testing::Test

@@ -1,16 +1,17 @@
 #ifndef POTENTIALGRID_H
 #define POTENTIALGRID_H
 
-#include <base/basegrid.h>
-
+#include <coords/basegrid.h>
 
 namespace Physics
 {
+    using namespace ::Coords;
     class PotentialGrid : public BaseGrid<Scalar>
     {
+
         private:
             void imposeImpl_noAcceleration(const PotentialGrid& potential, const PixelCoordinates& minIdxs, const PixelCoordinates& maxIdxs, const PixelCoordinates& startIdxs);
-            void imposeImpl_avxAccelerated(const PotentialGrid &potential, const PixelCoordinates &minIdxs, const PixelCoordinates &maxIdxs, const PixelCoordinates &startIdxs);
+            void imposeImpl_avxAccelerated(const PotentialGrid& potential, const PixelCoordinates& minIdxs, const PixelCoordinates& maxIdxs, const PixelCoordinates& startIdxs);
 
         public:
             PotentialGrid();

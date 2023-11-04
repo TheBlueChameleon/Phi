@@ -3,7 +3,7 @@
 
 using namespace testing;
 
-#include "gridfactory.h"
+#include "physics/gridfactory.h"
 
 TEST(GridFactory_Suite, makePotentials)
 {

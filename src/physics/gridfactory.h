@@ -1,12 +1,11 @@
 #ifndef GRIDFACTORY_H
 #define GRIDFACTORY_H
 
-#include "base/coordinates.h"
+#include "coords/coordinates.h"
 #include "potential/potentialgrid.h"
 
 namespace Physics
 {
-
     class GridFactory
     {
         private:
