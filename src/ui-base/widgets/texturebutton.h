@@ -1,5 +1,5 @@
-#ifndef BASETEXTUREBUTTON_H
-#define BASETEXTUREBUTTON_H
+#ifndef TEXTUREBUTTON_H
+#define TEXTUREBUTTON_H
 
 #include <optional>
 
@@ -11,7 +11,7 @@
 
 namespace UiBase
 {
-    class BaseTextureButton :
+    class TextureButton :
         public BaseWidget,
         public BaseMouseInteractor
     {
@@ -20,12 +20,9 @@ namespace UiBase
             std::optional<Texture> mouseOver;
             std::optional<Texture> clicked;
 
-            BaseTextureButton(Coords::PixelCoordinates pos, Texture&& texture);
-
         public:
-            BaseTextureButton(Coords::PixelCoordinates pos, Coords::PixelCoordinates size);
-
-            static BaseTextureButton fromFile(Coords::PixelCoordinates pos, const std::string& path);
+            TextureButton(Coords::PixelCoordinates pos, Texture&& texture);
+            static TextureButton fromFile(Coords::PixelCoordinates pos, const std::string& path);
 
             void setTextureNormal(const std::string& path);
             void setTextureMouseOver(const std::string& path);

@@ -4,6 +4,8 @@
 #include <exception>
 #include <stdexcept>
 
+#define DEF_ERROR(__name__) class __name__ : public Base::PhiError { public: __name__(const std::string& message); }
+
 namespace Base
 {
     class PhiError : public std::runtime_error
@@ -11,9 +13,10 @@ namespace Base
         public:
             PhiError(const std::string& message);
     };
-}
 
-#define DEF_ERROR(__name__) class __name__ : public Base::PhiError { public: __name__(const std::string& message); }
+    DEF_ERROR(KeyError);
+    DEF_ERROR(MemoryManagementError);
+}
 
 namespace Coords
 {

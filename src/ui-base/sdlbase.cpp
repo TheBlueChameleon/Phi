@@ -8,6 +8,7 @@ using namespace std::string_literals;
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "base/base.h"
 #include "coords/coordinates.h"
@@ -15,7 +16,7 @@ using namespace std::string_literals;
 #define SDL_PRIVATE
 #define UIBASE_PRIVATE
 #include "uibase.h"
-#include "ui-base/widgets/basetexturebutton.h"
+#include "ui-base/widgets/texturebutton.h"
 
 namespace UiBase
 {
@@ -75,6 +76,29 @@ namespace UiBase
         if (autoCallQuitUI)
         {
             std::atexit(quitUI);
+        }
+    }
+
+    void loadFont(const std::string& path, int size, const std::string& ID)
+    {
+        if (fonts.contains(ID))
+        {
+            throw Base::KeyError("Font ID '" + ID + "' is already in use");
+        }
+
+        auto fontPtr = TTF_OpenFont(path.c_str(), size);
+
+        if (!fontPtr)
+        {
+            throw SdlError("Could not load font '"s + path + "'");
+        }
+
+        auto [it, success] = fonts.emplace(ID, fontPtr);
+
+        if (!success)
+        {
+            TTF_CloseFont(fontPtr);
+            throw Base::MemoryManagementError("FontMap could not be updated");
         }
     }
 

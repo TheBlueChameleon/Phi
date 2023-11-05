@@ -1,56 +1,51 @@
 #include <iostream>
 
-#include "basetexturebutton.h"
+#include "texturebutton.h"
 
 namespace UiBase
 {
     using namespace ::Coords;
 
-    BaseTextureButton::BaseTextureButton(PixelCoordinates pos, Texture&& texture) :
+    TextureButton::TextureButton(PixelCoordinates pos, Texture&& texture) :
         BaseWidget(pos, texture.getSize()),
         normal(std::move(texture))
     {}
 
-    BaseTextureButton::BaseTextureButton(PixelCoordinates pos, PixelCoordinates size) :
-        BaseWidget(pos, size),
-        normal(Texture(size.x, size.y))
-    {}
-
-    BaseTextureButton BaseTextureButton::fromFile(PixelCoordinates pos, const std::string& path)
+    TextureButton TextureButton::fromFile(PixelCoordinates pos, const std::string& path)
     {
         Texture t(Texture::fromFile(path));
-        return BaseTextureButton(pos, std::move(t));
+        return TextureButton(pos, std::move(t));
     }
 
-    void BaseTextureButton::setTextureNormal(const std::string& path)
+    void TextureButton::setTextureNormal(const std::string& path)
     {
         normal = Texture::fromFile(path);
         setSize(normal.getSize());
     }
 
-    void BaseTextureButton::setTextureMouseOver(const std::string& path)
+    void TextureButton::setTextureMouseOver(const std::string& path)
     {
         // TODO: size check
         mouseOver.emplace(Texture::fromFile(path));
     }
 
-    void BaseTextureButton::clearTextureMouseOver()
+    void TextureButton::clearTextureMouseOver()
     {
         // TODO: size check
         mouseOver.reset();
     }
 
-    void BaseTextureButton::setTextureClicked(const std::string& path)
+    void TextureButton::setTextureClicked(const std::string& path)
     {
         clicked.emplace(Texture::fromFile(path));
     }
 
-    void BaseTextureButton::clearTextureClicked()
+    void TextureButton::clearTextureClicked()
     {
         clicked.reset();
     }
 
-    void BaseTextureButton::render() const
+    void TextureButton::render() const
     {
         const Texture* texture;
         switch (getMouseButtonState())

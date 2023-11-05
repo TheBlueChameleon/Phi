@@ -30,7 +30,7 @@ void show_uibase()
     using namespace UiBase;
 
     initUI();
-    BaseTextureButton b = BaseTextureButton::fromFile(Coords::PixelCoordinates{150,50}, "res/btn_blue.png");
+    TextureButton b = TextureButton::fromFile(Coords::PixelCoordinates{150,50}, "res/btn_blue.png");
     b.setTextureClicked("res/btn_red.png");
     b.setTextureMouseOver("res/btn_green.png");
 

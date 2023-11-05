@@ -12,16 +12,11 @@ namespace UiBase
     class Texture
     {
         private:
-            SDL_Texture* texture;
-            Coords::PixelCoordinates size;
-
-            Texture(SDL_Texture* texture, Coords::PixelCoordinates size);
+            SDL_Texture* texture = nullptr;
+            Coords::PixelCoordinates size = {0, 0};
 
         public:
-            Texture(int width, int height,
-                    Uint32 format = SDL_PIXELFORMAT_RGBA8888,
-                    int access =SDL_TEXTUREACCESS_TARGET);
-            Texture(Texture& other) = default;
+            Texture(SDL_Texture* texture);
             Texture(Texture&& other);
             ~Texture();
 

@@ -11,17 +11,12 @@ using namespace Coords;
 
 namespace UiBase
 {
-    Texture::Texture(SDL_Texture* texture, Coords::PixelCoordinates size)
+    Texture::Texture(SDL_Texture* texture)
     {
+        PixelCoordinates size;
+        SDL_QueryTexture(texture, nullptr, nullptr, &size.x, &size.y);
         this->texture = texture;
         this->size = size;
-    }
-
-    Texture::Texture(int width, int height, Uint32 format, int access)
-    {
-        // TODO: sanity checks
-        texture = SDL_CreateTexture(renderer, format, access, width, height);
-        size = {width, height};
     }
 
     Texture::Texture(Texture&& other) :
@@ -68,19 +63,16 @@ namespace UiBase
             throw SdlError("Unable to load image '"s + path + "'\n"
                            "SDL_image Error: "s +IMG_GetError());
         }
-        PixelCoordinates size = {loadedSurface->w, loadedSurface->h};
 
-        //Create texture from surface pixels
         SDL_Texture* newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        SDL_FreeSurface(loadedSurface);
         if (newTexture == NULL)
         {
             throw SdlError("Unable to create texture from '"s + path + "'\n"
                            "SDL_image Error: "s +IMG_GetError());
         }
 
-        SDL_FreeSurface(loadedSurface);
-
-        return Texture(newTexture, size);
+        return Texture(newTexture);
     }
 
     Coords::PixelCoordinates Texture::getSize() const

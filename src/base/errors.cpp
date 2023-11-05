@@ -5,6 +5,8 @@
 namespace Base
 {
     PhiError::PhiError(const std::string& message) : std::runtime_error(message) {}
+    DEF_ERROR(KeyError);
+    DEF_ERROR(MemoryManagementError);
 }
 
 namespace Coords
