@@ -7,7 +7,7 @@ namespace UiBase
     SDL_Window*   window = NULL;
     SDL_Renderer* renderer = NULL;
 
-    std::vector<std::reference_wrapper<Widget>> widgets;
+    std::vector<Widget*> widgets;
 
     const int SCREEN_WIDTH = 800;
     const int SCREEN_HEIGHT = 600;

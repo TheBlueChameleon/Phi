@@ -1,8 +1,13 @@
+#include <cstdlib>
+#include <concepts>
 #include <iostream>
 #include <string>
 using namespace std::string_literals;
+#include <ranges>
 
 #include "base/base.h"
+
+#include "coords/coordinates.h"
 
 #define SDL_PRIVATE
 #define UIBASE_PRIVATE
@@ -11,7 +16,20 @@ using namespace std::string_literals;
 
 namespace UiBase
 {
-    static void init()
+    template<typename T>
+    concept MouseEvent =
+        std::is_convertible_v<T, SDL_MouseButtonEvent> ||
+        std::is_convertible_v<T, SDL_MouseMotionEvent> ||
+        std::is_convertible_v<T, SDL_MouseWheelEvent>;
+
+    template<MouseEvent E>
+    using MIMethod = void (MouseInteractor::*)(const E&);
+
+    template<MouseEvent E> void dispatch_mouseEvent(E& e, MIMethod<E> method);
+
+    // ====================================================================== //
+
+    void initUI(bool autoCallQuitUI)
     {
         if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         {
@@ -50,65 +68,99 @@ namespace UiBase
         {
             throw SdlError("SDL_image could not initialize! SDL_image Error:\n"s + IMG_GetError());
         }
+
+        if (autoCallQuitUI)
+        {
+            std::atexit(quitUI);
+        }
     }
 
-    static void quit()
+    void quitUI()
     {
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         window = NULL;
         renderer = NULL;
 
-        //Quit SDL subsystems
         IMG_Quit();
         SDL_Quit();
     }
 
-    void mainloop()
+    void uiMainloop()
     {
-        init();
-
-        Texture t = Texture::fromFile("res/22-html-table_2.png");
-        BaseTextureButton b = BaseTextureButton::fromFile(Coords::PixelCoordinates{150,50}, "res/22-html-divpspan.png");
-
-        SDL_Event e;
-
         do
         {
             SDL_RenderClear(renderer);
-
-            //Render texture to screen
-            t.renderAt({50,50});
-            t.renderAt({60,60});
-            b.render();
-
+            render_widgets();
             SDL_RenderPresent(renderer);
         }
-        while (dispatch_events(e));
-
-        quit();
+        while (dispatch_events());
     }
 
-    bool dispatch_events(SDL_Event& e)
+    void render_widgets()
     {
+        for (auto widget : widgets)
+        {
+            if (widget->isVisible())
+            {
+                widget->render();
+            }
+        }
+    }
+
+    bool dispatch_events()
+    {
+        SDL_Event e;
         while (SDL_PollEvent(&e) != 0)
         {
-            //User requests quit
-            if (e.type == SDL_QUIT)
+            switch (e.type)
             {
-                return false;
+                case SDL_MOUSEMOTION:
+                    {
+                        dispatch_mouseEvent(e.motion, &MouseInteractor::onMouseOver);
+                        break;
+                    }
+
+                case SDL_MOUSEBUTTONDOWN:
+                case SDL_MOUSEBUTTONUP:
+                    dispatch_mouseEvent(e.button, &MouseInteractor::onMouseButton);
+                    break;
+                case SDL_MOUSEWHEEL:
+                    dispatch_mouseEvent(e.wheel, &MouseInteractor::onMouseWheel);
+                    break;
+
+                case SDL_QUIT:
+                    return false;
             }
         }
 
         return true;
     }
 
-    void render_widgets()
+    template<MouseEvent E>
+    void dispatch_mouseEvent(E& e, MIMethod<E> method)
     {
-        for (auto widgetRef : widgets)
+        Coords::PixelCoordinates pos = {e.x, e.y};
+        Widget* widget = findWidgetAt(pos);
+        MouseInteractor* miWidget = dynamic_cast<MouseInteractor*>(widget);
+        if (miWidget)
         {
-            auto& widget = widgetRef.get();
-
+            (miWidget->*method)(e);
         }
+    }
+
+    Widget* findWidgetAt(Coords::PixelCoordinates pos)
+    {
+        for (auto widget :  std::views::reverse(widgets))
+        {
+            Coords::PixelCoordinates upperLeft = widget->getPosition();
+            Coords::PixelCoordinates lowerRight = upperLeft + widget->getSize() - Coords::PixelCoordinates {1, 1};
+            if (Coords::isWithin(pos, upperLeft, lowerRight))
+            {
+                return widget;
+            }
+        }
+
+        return nullptr;
     }
 }

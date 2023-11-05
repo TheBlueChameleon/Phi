@@ -6,6 +6,7 @@
 #include "texture.h"
 
 #include "widgets/widget.h"
+#include "widgets/mouseinteractor.h"
 #include "ui-base/widgets/basetexturebutton.h"
 
 #endif

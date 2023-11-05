@@ -17,7 +17,7 @@ namespace UiBase
 #endif
 
 #ifdef UIBASE_PRIVATE
-    extern std::vector<std::reference_wrapper<Widget>> widgets;
+    extern std::vector<Widget*> widgets;
 #endif
 
     extern const int SCREEN_WIDTH;

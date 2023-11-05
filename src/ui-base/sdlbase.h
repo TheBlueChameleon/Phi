@@ -3,10 +3,19 @@
 
 #include <SDL2/SDL.h>
 
+#include "ui-base/widgets/widget.h"
+
 namespace UiBase
 {
-    void mainloop();
-    bool dispatch_events(SDL_Event& e);
+    void initUI(bool autoCallQuitUI = true);
+    void quitUI();
+
+    void uiMainloop();
+
+    bool dispatch_events();
+    Widget* findWidgetAt(Coords::PixelCoordinates pos);
+
+    void render_widgets();
 }
 
 #endif // WINDOW_H

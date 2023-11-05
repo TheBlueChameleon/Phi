@@ -1,10 +1,21 @@
-#include "basewidget.h"
+#include <algorithm>
+
+#define UIBASE_PRIVATE
+#include "ui-base/uibase.h"
 
 namespace UiBase
 {
     BaseWidget::BaseWidget(const Coords::PixelCoordinates& position, const Coords::PixelCoordinates& size) :
         position(position), size(size)
-    {}
+    {
+        widgets.push_back(this);
+    }
+
+    BaseWidget::~BaseWidget()
+    {
+        auto it = std::find(widgets.begin(), widgets.end(), this);
+        widgets.erase(it);
+    }
 
     bool BaseWidget::isVisible() const
     {

@@ -14,6 +14,7 @@ namespace UiBase
 
         public:
             BaseWidget(const Coords::PixelCoordinates& position, const Coords::PixelCoordinates& size);
+            ~BaseWidget();
 
             // Widget interface
             bool isVisible() const;

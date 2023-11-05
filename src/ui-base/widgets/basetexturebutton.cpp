@@ -9,9 +9,7 @@ namespace UiBase
     BaseTextureButton::BaseTextureButton(PixelCoordinates pos, Texture&& texture) :
         BaseWidget(pos, texture.getSize()),
         normal(std::move(texture))
-    {
-        std::cout << "GOT TEXTURE WITH " << texture.getSize().to_string() << std::endl;
-    }
+    {}
 
     BaseTextureButton::BaseTextureButton(PixelCoordinates pos, PixelCoordinates size) :
         BaseWidget(pos, size),
@@ -27,6 +25,11 @@ namespace UiBase
     void BaseTextureButton::render() const
     {
         normal.renderAt(getPosition());
+    }
+
+    void BaseTextureButton::onMouseButton(const SDL_MouseButtonEvent& e)
+    {
+        std::cout << "click!" << std::endl;
     }
 
     void BaseTextureButton::onClick(const SDL_MouseButtonEvent& e) {}

@@ -27,7 +27,11 @@ void show_physics()
 
 void show_uibase()
 {
-    UiBase::mainloop();
+    using namespace UiBase;
+
+    initUI();
+    BaseTextureButton b = BaseTextureButton::fromFile(Coords::PixelCoordinates{150,50}, "res/22-html-divpspan.png");
+    uiMainloop();
 }
 
 int main()

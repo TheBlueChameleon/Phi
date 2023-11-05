@@ -28,12 +28,15 @@ namespace UiBase
             static BaseTextureButton fromFile(Coords::PixelCoordinates pos, const std::string& path);
 
             // Widget interface
-            void render() const;
+            virtual void render() const;
 
             // MouseInteractor interface
-            void onClick(const SDL_MouseButtonEvent& e);
-            void onMouseOver(const SDL_MouseMotionEvent& e);
-            void onMouseWheel(const SDL_MouseWheelEvent& e);
+            virtual void onMouseButton(const SDL_MouseButtonEvent& e);
+            virtual void onMouseOver(const SDL_MouseMotionEvent& e);
+            virtual void onMouseWheel(const SDL_MouseWheelEvent& e);
+
+            virtual void onClick(const SDL_MouseButtonEvent& e);
+
     };
 }
 
