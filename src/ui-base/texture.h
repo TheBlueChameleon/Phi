@@ -25,6 +25,8 @@ namespace UiBase
             Texture(Texture&& other);
             ~Texture();
 
+            Texture& operator=(Texture&& other);
+
             static Texture fromFile(const std::string& path);
 
             SDL_Texture* expose();

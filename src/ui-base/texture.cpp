@@ -41,6 +41,24 @@ namespace UiBase
         texture = nullptr;
     }
 
+    UiBase::Texture& UiBase::Texture::operator=(Texture&& other)
+    {
+        std::cout << "got here; self = " << texture << ", other = " << other.texture << ", " << other.size.to_string() << std::endl;
+
+        if (texture)
+        {
+            SDL_DestroyTexture(texture);
+        }
+
+        texture = other.texture;
+        size    = other.size;
+        other.texture = nullptr;
+        other.size = {0,0};
+
+        std::cout << "got out" << std::endl;
+        return *this;
+    }
+
 
     Texture Texture::fromFile(const std::string& path)
     {

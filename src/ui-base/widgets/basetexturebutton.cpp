@@ -18,23 +18,72 @@ namespace UiBase
 
     BaseTextureButton BaseTextureButton::fromFile(PixelCoordinates pos, const std::string& path)
     {
-        Texture t = Texture::fromFile(path);
+        Texture t(Texture::fromFile(path));
         return BaseTextureButton(pos, std::move(t));
+    }
+
+    void BaseTextureButton::setTextureNormal(const std::string& path)
+    {
+        normal = Texture::fromFile(path);
+        setSize(normal.getSize());
+    }
+
+    void BaseTextureButton::setTextureMouseOver(const std::string& path)
+    {
+        // TODO: size check
+        mouseOver.emplace(Texture::fromFile(path));
+    }
+
+    void BaseTextureButton::clearTextureMouseOver()
+    {
+        // TODO: size check
+        mouseOver.reset();
+    }
+
+    void BaseTextureButton::setTextureClicked(const std::string& path)
+    {
+        clicked.emplace(Texture::fromFile(path));
+    }
+
+    void BaseTextureButton::clearTextureClicked()
+    {
+        clicked.reset();
     }
 
     void BaseTextureButton::render() const
     {
-        normal.renderAt(getPosition());
+        const Texture* texture;
+        switch (getMouseButtonState())
+        {
+            case MouseButtonState::Normal:
+                {
+                    Coords::PixelCoordinates mousePos;
+                    Coords::PixelCoordinates upperLeft = this->getPosition();
+                    Coords::PixelCoordinates lowerRight = this->getPosition() + this->getSize() - Coords::PixelCoordinates{1,1};
+                    SDL_GetMouseState(&mousePos.x, &mousePos.y);
+
+                    if (isWithin(mousePos, upperLeft, lowerRight))
+                    {
+                        // *INDENT-OFF*
+                        if (mouseOver.has_value())  {texture = &*mouseOver;}
+                        else                        {texture = &normal;}
+                        // *INDENT-ON*
+                    }
+                    else
+                    {
+                        texture = &normal;
+                    }
+                }
+                break;
+            case MouseButtonState::Clicked:
+            case MouseButtonState::Dragged:
+                // *INDENT-OFF*
+                if (clicked.has_value())    {texture = &*clicked;}
+                else                        {texture = &normal;}
+                // *INDENT-ON*
+                break;
+        }
+
+        texture->renderAt(getPosition());
     }
-
-    void BaseTextureButton::onMouseButton(const SDL_MouseButtonEvent& e)
-    {
-        std::cout << "click!" << std::endl;
-    }
-
-    void BaseTextureButton::onClick(const SDL_MouseButtonEvent& e) {}
-
-    void BaseTextureButton::onMouseOver(const SDL_MouseMotionEvent& e) {}
-
-    void BaseTextureButton::onMouseWheel(const SDL_MouseWheelEvent& e) {}
 }

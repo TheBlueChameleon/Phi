@@ -5,8 +5,11 @@
 using namespace std::string_literals;
 #include <ranges>
 
-#include "base/base.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_image.h>
 
+#include "base/base.h"
 #include "coords/coordinates.h"
 
 #define SDL_PRIVATE
@@ -116,15 +119,14 @@ namespace UiBase
             switch (e.type)
             {
                 case SDL_MOUSEMOTION:
-                    {
-                        dispatch_mouseEvent(e.motion, &MouseInteractor::onMouseOver);
-                        break;
-                    }
+                    dispatch_mouseEvent(e.motion, &MouseInteractor::onMouseMotion);
+                    break;
 
                 case SDL_MOUSEBUTTONDOWN:
                 case SDL_MOUSEBUTTONUP:
                     dispatch_mouseEvent(e.button, &MouseInteractor::onMouseButton);
                     break;
+
                 case SDL_MOUSEWHEEL:
                     dispatch_mouseEvent(e.wheel, &MouseInteractor::onMouseWheel);
                     break;

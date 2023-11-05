@@ -8,9 +8,12 @@ namespace UiBase
     struct MouseInteractor
     {
         virtual void onMouseButton(const SDL_MouseButtonEvent& e) = 0;
-        virtual void onMouseOver(const SDL_MouseMotionEvent& e) = 0;
+        virtual void onMouseMotion(const SDL_MouseMotionEvent& e) = 0;
         virtual void onMouseWheel(const SDL_MouseWheelEvent& e) = 0;
 
+        virtual void onMouseOver(const SDL_MouseMotionEvent& e) = 0;
+        virtual void onDrag(const SDL_MouseMotionEvent& e) = 0;
+        virtual void onDrop(const SDL_MouseButtonEvent& e) = 0;
         virtual void onClick(const SDL_MouseButtonEvent& e) = 0;
     };
 }

@@ -131,6 +131,7 @@ add_library(Phi-uibase STATIC
 
     src/ui-base/widgets/widget.h
     src/ui-base/widgets/mouseinteractor.h
+    src/ui-base/widgets/basemouseinteractor.h src/ui-base/widgets/basemouseinteractor.cpp
     src/ui-base/widgets/basewidget.h src/ui-base/widgets/basewidget.cpp
     src/ui-base/widgets/basetexturebutton.h src/ui-base/widgets/basetexturebutton.cpp
 )
