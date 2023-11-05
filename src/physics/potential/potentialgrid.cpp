@@ -6,6 +6,7 @@
 
 #include "potentialgrid.h"
 
+using namespace Coords;
 namespace Physics
 {
     PotentialGrid::PotentialGrid() : BaseGrid<Scalar>({0,0}, 0) {}

@@ -31,8 +31,6 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 # auto detection did not work on my machine, so define the lib flags manually ...
 set(SDL2_LIBRARY_COMPONENTS "-lSDL2;-lSDL2_image;-lSDL2_ttf")
 
-#link_libraries(${SDL2_LINKER_FLAGS})
-
 include_directories(
     ${SDL2_INCLUDE_DIRS}
     ${SDL2_IMAGE_INCLUDE_DIRS}
@@ -78,7 +76,7 @@ endif ()
 include_directories(${GTestIncludes})
 
 # ============================================================================ #
-# library definition
+# library definitions
 
 add_library(Phi-base STATIC
     src/base/base.h
@@ -127,8 +125,14 @@ endif()
 
 add_library(Phi-uibase STATIC
     src/ui-base/uibase.h
-    src/ui-base/constants.h src/ui-base/constants.cpp
+    src/ui-base/globals.h src/ui-base/globals.cpp
     src/ui-base/sdlbase.h src/ui-base/sdlbase.cpp
+    src/ui-base/texture.h src/ui-base/texture.cpp
+
+    src/ui-base/widgets/widget.h
+    src/ui-base/widgets/mouseinteractor.h
+    src/ui-base/widgets/basewidget.h src/ui-base/widgets/basewidget.cpp
+    src/ui-base/widgets/basetexturebutton.h src/ui-base/widgets/basetexturebutton.cpp
 )
 
 target_include_directories(Phi-uibase PUBLIC

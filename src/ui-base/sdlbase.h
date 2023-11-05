@@ -1,17 +1,12 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
 
 namespace UiBase
 {
-#ifdef SDL_PRIVATE
-    extern SDL_Window*   window;
-    extern SDL_Renderer* renderer;
-#endif
-
     void mainloop();
+    bool dispatch_events(SDL_Event& e);
 }
 
 #endif // WINDOW_H

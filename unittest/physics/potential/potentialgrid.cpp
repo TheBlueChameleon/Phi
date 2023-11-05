@@ -5,6 +5,7 @@
 using namespace testing;
 
 #include "physics/gridfactory.h"
+using namespace Coords;
 using namespace Physics;
 
 class PotentialFixture : public testing::Test

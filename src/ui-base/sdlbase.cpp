@@ -5,17 +5,15 @@ using namespace std::string_literals;
 #include "base/base.h"
 
 #define SDL_PRIVATE
-#include "sdlbase.h"
-#include "constants.h"
+#define UIBASE_PRIVATE
+#include "uibase.h"
+#include "ui-base/widgets/basetexturebutton.h"
 
 namespace UiBase
 {
-    SDL_Window*   window = NULL;
-    SDL_Renderer* renderer = NULL;
-
     static void init()
     {
-        if (SDL_Init(SDL_INIT_VIDEO) < 0)
+        if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         {
             throw SdlError("SDL could not initialize! SDL Error:\n"s + SDL_GetError());
         }
@@ -38,12 +36,14 @@ namespace UiBase
             throw SdlError("Window could not be created! SDL Error:\n"s + SDL_GetError());
         }
 
+
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         if (renderer == NULL)
         {
             throw SdlError("Renderer could not be created! SDL Error:\n"s + SDL_GetError());
         }
         SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
         int imgFlags = IMG_INIT_PNG;
         if (!(IMG_Init(imgFlags) & imgFlags))
@@ -68,36 +68,47 @@ namespace UiBase
     {
         init();
 
-        //Main loop flag
-        bool quit_flag = false;
+        Texture t = Texture::fromFile("res/22-html-table_2.png");
+        BaseTextureButton b = BaseTextureButton::fromFile(Coords::PixelCoordinates{150,50}, "res/22-html-divpspan.png");
 
-        //Event handler
         SDL_Event e;
 
-        //While application is running
-        while (!quit_flag)
+        do
         {
-            //Handle events on queue
-            while (SDL_PollEvent(&e) != 0)
-            {
-                //User requests quit
-                if (e.type == SDL_QUIT)
-                {
-                    quit_flag = true;
-                }
-            }
-
-            //Clear screen
             SDL_RenderClear(renderer);
 
             //Render texture to screen
-            //SDL_RenderCopy(renderer, gTexture, NULL, NULL);
+            t.renderAt({50,50});
+            t.renderAt({60,60});
+            b.render();
 
-            //Update screen
             SDL_RenderPresent(renderer);
         }
+        while (dispatch_events(e));
 
         quit();
     }
 
+    bool dispatch_events(SDL_Event& e)
+    {
+        while (SDL_PollEvent(&e) != 0)
+        {
+            //User requests quit
+            if (e.type == SDL_QUIT)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    void render_widgets()
+    {
+        for (auto widgetRef : widgets)
+        {
+            auto& widget = widgetRef.get();
+
+        }
+    }
 }

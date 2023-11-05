@@ -2,6 +2,7 @@
 
 #include "gridfactory.h"
 
+using namespace Coords;
 namespace Physics
 {
     const PixelCoordinates GridFactory::USE_DEFAULT = PixelCoordinates(-1, -1);

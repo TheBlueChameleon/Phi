@@ -9,17 +9,17 @@ namespace Physics
     class GridFactory
     {
         private:
-            static const PixelCoordinates USE_DEFAULT;
+            static const Coords::PixelCoordinates USE_DEFAULT;
 
-            PixelCoordinates size;
-            Real gridConstant;
+            Coords::PixelCoordinates size;
+            Coords::Real gridConstant;
 
         public:
-            GridFactory(PixelCoordinates size, Real gridConstant);
+            GridFactory(Coords::PixelCoordinates size, Coords::Real gridConstant);
 
             PotentialGrid makeWorld() const;
-            PotentialGrid makeOverlayAtConstantLevel(Real level, PixelCoordinates size = USE_DEFAULT) const;
-            PotentialGrid makeOverlayFromCharge(Real charge, Real cutoff = 0.1) const;
+            PotentialGrid makeOverlayAtConstantLevel(Coords::Real level, Coords::PixelCoordinates size = USE_DEFAULT) const;
+            PotentialGrid makeOverlayFromCharge(Coords::Real charge, Coords::Real cutoff = 0.1) const;
     };
 }
 

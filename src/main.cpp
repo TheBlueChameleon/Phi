@@ -7,6 +7,7 @@
 
 void show_physics()
 {
+    using namespace Coords;
     using namespace Physics;
 
     const auto gf = GridFactory({50, 10}, 1);

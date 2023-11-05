@@ -8,6 +8,7 @@ using namespace testing;
 TEST(GridFactory_Suite, makePotentials)
 {
     using namespace Physics;
+    using namespace Coords;
 
     const auto templateSize = PixelCoordinates {50, 10};
     const auto origin = PixelCoordinates{0, 0};

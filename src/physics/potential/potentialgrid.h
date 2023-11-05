@@ -5,23 +5,22 @@
 
 namespace Physics
 {
-    using namespace ::Coords;
-    class PotentialGrid : public BaseGrid<Scalar>
+    class PotentialGrid : public Coords::BaseGrid<Coords::Scalar>
     {
 
         private:
-            void imposeImpl_noAcceleration(const PotentialGrid& potential, const PixelCoordinates& minIdxs, const PixelCoordinates& maxIdxs, const PixelCoordinates& startIdxs);
-            void imposeImpl_avxAccelerated(const PotentialGrid& potential, const PixelCoordinates& minIdxs, const PixelCoordinates& maxIdxs, const PixelCoordinates& startIdxs);
+            void imposeImpl_noAcceleration(const PotentialGrid& potential, const Coords::PixelCoordinates& minIdxs, const Coords::PixelCoordinates& maxIdxs, const Coords::PixelCoordinates& startIdxs);
+            void imposeImpl_avxAccelerated(const PotentialGrid& potential, const Coords::PixelCoordinates& minIdxs, const Coords::PixelCoordinates& maxIdxs, const Coords::PixelCoordinates& startIdxs);
 
         public:
             PotentialGrid();
-            PotentialGrid(PixelCoordinates size, Real gridConstant, Real level = 0);
+            PotentialGrid(Coords::PixelCoordinates size, Coords::Real gridConstant, Coords::Real level = 0);
 
-            PixelCoordinates getMinimumImposeIndices(const PotentialGrid& potential, const PixelCoordinates at) const;
-            PixelCoordinates getMaximumImposeIndices(const PotentialGrid& potential, const PixelCoordinates at) const;
+            Coords::PixelCoordinates getMinimumImposeIndices(const PotentialGrid& potential, const Coords::PixelCoordinates at) const;
+            Coords::PixelCoordinates getMaximumImposeIndices(const PotentialGrid& potential, const Coords::PixelCoordinates at) const;
 
-            void imposeAt(const PotentialGrid& potential, const RealCoordinates  at);
-            void imposeAt(const PotentialGrid& potential, const PixelCoordinates at);
+            void imposeAt(const PotentialGrid& potential, const Coords::RealCoordinates  at);
+            void imposeAt(const PotentialGrid& potential, const Coords::PixelCoordinates at);
 
             std::string to_string() const;
     };
