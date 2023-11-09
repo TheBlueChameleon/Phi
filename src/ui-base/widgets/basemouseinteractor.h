@@ -5,7 +5,10 @@
 
 namespace UiBase
 {
-    class BaseMouseInteractor : public MouseInteractor
+    class DragSubstitute;
+
+    class BaseMouseInteractor :
+        public MouseInteractor
     {
         public:
             enum class MouseButtonState
@@ -17,21 +20,27 @@ namespace UiBase
 
         private:
             MouseButtonState mouseButtonState = MouseButtonState::Normal;
+            std::map<Callbacks, std::function<void(const SDL_Event&)>> calbacks;
+            DragSubstitute* substitute = nullptr;
+
+            void startDrag(const SDL_MouseMotionEvent e);
+            void continueDrag(const SDL_MouseMotionEvent e);
+            void endDrag(const SDL_MouseButtonEvent e);
 
         public:
             BaseMouseInteractor() = default;
 
             MouseButtonState getMouseButtonState() const;
+            void setMouseButtonState(MouseButtonState newMouseButtonState);
 
             // MouseInteractor interface
-            virtual void onMouseButton(const SDL_MouseButtonEvent& e);
-            virtual void onMouseMotion(const SDL_MouseMotionEvent& e);
-            virtual void onMouseWheel(const SDL_MouseWheelEvent& e);
+            virtual void onMouseButton(const SDL_Event& e);
+            virtual void onMouseMotion(const SDL_Event& e);
+            virtual void onMouseWheel(const SDL_Event& e);
 
-            virtual void onMouseOver(const SDL_MouseMotionEvent& e);
-            virtual void onDrag(const SDL_MouseMotionEvent& e);
-            virtual void onDrop(const SDL_MouseButtonEvent& e);
-            virtual void onClick(const SDL_MouseButtonEvent& e);
+            const std::function<void (const SDL_Event&)>& getEventHandler(const Callbacks id);
+            void setEventHandler(const Callbacks id, const std::function<void (const SDL_Event&)>& callback);
+
     };
 }
 

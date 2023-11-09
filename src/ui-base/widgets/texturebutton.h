@@ -31,7 +31,7 @@ namespace UiBase
             void clearTextureClicked();
 
             // Widget interface
-            virtual void render() const;
+            virtual const Texture& render() const;
 
     };
 }

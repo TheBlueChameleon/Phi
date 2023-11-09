@@ -11,11 +11,10 @@ namespace UiBase
     void loadFont(const std::string& path, int size, const std::string& ID);
 
     void uiMainloop();
-
     bool dispatch_events();
-    Widget* findWidgetAt(Coords::PixelCoordinates pos);
-
     void render_widgets();
+
+    Widget* findWidgetAt(Coords::PixelCoordinates pos);
 }
 
 #endif // WINDOW_H

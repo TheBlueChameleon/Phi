@@ -32,6 +32,21 @@ namespace UiBase
         visible = false;
     }
 
+    bool BaseWidget::isActive() const
+    {
+        return active;
+    }
+
+    void BaseWidget::makeActive()
+    {
+        active = true;
+    }
+
+    void BaseWidget::makeInactive()
+    {
+        active = false;
+    }
+
     Coords::PixelCoordinates BaseWidget::getPosition() const
     {
         return position;

@@ -9,6 +9,7 @@ namespace UiBase
     {
         private:
             bool visible = true;
+            bool active = true;
             Coords::PixelCoordinates position;
             Coords::PixelCoordinates size;
 
@@ -20,6 +21,10 @@ namespace UiBase
             bool isVisible() const;
             void makeVisible();
             void makeInvisible();
+
+            bool isActive() const;
+            void makeActive();
+            void makeInactive();
 
             Coords::PixelCoordinates getPosition() const;
             void setPosition(const Coords::PixelCoordinates& pos);

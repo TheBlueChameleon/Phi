@@ -45,7 +45,7 @@ namespace UiBase
         clicked.reset();
     }
 
-    void TextureButton::render() const
+    const Texture& TextureButton::render() const
     {
         const Texture* texture;
         switch (getMouseButtonState())
@@ -79,6 +79,6 @@ namespace UiBase
                 break;
         }
 
-        texture->renderAt(getPosition());
+        return *texture;
     }
 }

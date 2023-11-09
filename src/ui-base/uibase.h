@@ -7,8 +7,10 @@
 #include "surface.h"
 
 #include "widgets/widget.h"
+#include "widgets/callbacks.h"
 #include "widgets/mouseinteractor.h"
-#include "ui-base/widgets/texturebutton.h"
+#include "widgets/dragsubstitute.h"
+#include "widgets/texturebutton.h"
 
 #endif
 

@@ -34,6 +34,8 @@ void show_uibase()
     b.setTextureClicked("res/btn_red.png");
     b.setTextureMouseOver("res/btn_green.png");
 
+    std::cout << "button = " << &b << std::endl;
+
     uiMainloop();
 }
 

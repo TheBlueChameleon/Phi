@@ -11,12 +11,37 @@ using namespace Coords;
 
 namespace UiBase
 {
+    Texture::Texture() :
+        size(Coords::PixelCoordinates {0,0}),
+        texture(nullptr)
+    {}
+
     Texture::Texture(SDL_Texture* texture)
     {
         PixelCoordinates size;
         SDL_QueryTexture(texture, nullptr, nullptr, &size.x, &size.y);
         this->texture = texture;
         this->size = size;
+    }
+
+    Texture::Texture(const Coords::PixelCoordinates& size, int access) :
+        size(size)
+    {
+        // TODO sanity check on size
+        texture = SDL_CreateTexture(renderer,
+                                    SDL_GetWindowPixelFormat(window) /*SDL_PIXELFORMAT_RGBA8888*/,
+                                    access,
+                                    size.x, size.y);
+        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    }
+
+    Texture::Texture(const Texture& other) :
+        Texture(other.getSize(), SDL_TEXTUREACCESS_TARGET)
+    {
+        // TODO handle return value = error code
+        SDL_SetRenderTarget(renderer, this->texture);
+        SDL_RenderCopy(renderer, other.texture, nullptr, nullptr);
+        SDL_SetRenderTarget(renderer, nullptr);  // set back to screen
     }
 
     Texture::Texture(Texture&& other) :
@@ -35,25 +60,6 @@ namespace UiBase
         }
         texture = nullptr;
     }
-
-    UiBase::Texture& UiBase::Texture::operator=(Texture&& other)
-    {
-        std::cout << "got here; self = " << texture << ", other = " << other.texture << ", " << other.size.to_string() << std::endl;
-
-        if (texture)
-        {
-            SDL_DestroyTexture(texture);
-        }
-
-        texture = other.texture;
-        size    = other.size;
-        other.texture = nullptr;
-        other.size = {0,0};
-
-        std::cout << "got out" << std::endl;
-        return *this;
-    }
-
 
     Texture Texture::fromFile(const std::string& path)
     {
@@ -78,6 +84,12 @@ namespace UiBase
     Coords::PixelCoordinates Texture::getSize() const
     {
         return size;
+    }
+
+    void Texture::setAlpha(Uint8 alpha)
+    {
+        // TODO handle return value = error code
+        SDL_SetTextureAlphaMod(texture, alpha);
     }
 
     SDL_Texture* Texture::expose()

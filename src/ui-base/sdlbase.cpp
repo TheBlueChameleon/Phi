@@ -20,19 +20,6 @@ using namespace std::string_literals;
 
 namespace UiBase
 {
-    template<typename T>
-    concept MouseEvent =
-        std::is_convertible_v<T, SDL_MouseButtonEvent> ||
-        std::is_convertible_v<T, SDL_MouseMotionEvent> ||
-        std::is_convertible_v<T, SDL_MouseWheelEvent>;
-
-    template<MouseEvent E>
-    using MIMethod = void (MouseInteractor::*)(const E&);
-
-    template<MouseEvent E> void dispatch_mouseEvent(E& e, MIMethod<E> method);
-
-    // ====================================================================== //
-
     void initUI(bool autoCallQuitUI)
     {
         if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -79,6 +66,19 @@ namespace UiBase
         }
     }
 
+    void quitUI()
+    {
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        window = NULL;
+        renderer = NULL;
+
+        IMG_Quit();
+        SDL_Quit();
+    }
+
+    // ====================================================================== //
+
     void loadFont(const std::string& path, int size, const std::string& ID)
     {
         if (fonts.contains(ID))
@@ -102,16 +102,22 @@ namespace UiBase
         }
     }
 
-    void quitUI()
-    {
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        window = NULL;
-        renderer = NULL;
+    // ====================================================================== //
 
-        IMG_Quit();
-        SDL_Quit();
-    }
+    using MouseInteractorMethod = void (MouseInteractor::*)(const SDL_Event&);
+
+    using MotionOffset = decltype(&SDL_Event::motion);
+    using ButtonOffset = decltype(&SDL_Event::button);
+    using WheelOffset = decltype(&SDL_Event::wheel);
+
+    template<typename T>
+    concept MouseEventOffset =
+        std::is_convertible_v<T, MotionOffset> ||
+        std::is_convertible_v<T, ButtonOffset> ||
+        std::is_convertible_v<T, WheelOffset>;
+
+    void dispatch_mouseEvent(const SDL_Event& e, MouseInteractorMethod method, MouseEventOffset auto offset);
+
 
     void uiMainloop()
     {
@@ -126,12 +132,11 @@ namespace UiBase
 
     void render_widgets()
     {
-        for (auto widget : widgets)
+        for (auto widget : std::ranges::filter_view(widgets, &Widget::isVisible))
         {
-            if (widget->isVisible())
-            {
-                widget->render();
-            }
+            (*widget)
+            .render()
+            .renderAt(widget->getPosition());
         }
     }
 
@@ -143,19 +148,20 @@ namespace UiBase
             switch (e.type)
             {
                 case SDL_MOUSEMOTION:
-                    dispatch_mouseEvent(e.motion, &MouseInteractor::onMouseMotion);
+                    dispatch_mouseEvent(e, &MouseInteractor::onMouseMotion, &SDL_Event::motion);
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
                 case SDL_MOUSEBUTTONUP:
-                    dispatch_mouseEvent(e.button, &MouseInteractor::onMouseButton);
+                    dispatch_mouseEvent(e, &MouseInteractor::onMouseButton, &SDL_Event::motion);
                     break;
 
                 case SDL_MOUSEWHEEL:
-                    dispatch_mouseEvent(e.wheel, &MouseInteractor::onMouseWheel);
+                    dispatch_mouseEvent(e, &MouseInteractor::onMouseWheel, &SDL_Event::motion);
                     break;
 
                 case SDL_QUIT:
+                case SDL_APP_TERMINATING:
                     return false;
             }
         }
@@ -163,10 +169,9 @@ namespace UiBase
         return true;
     }
 
-    template<MouseEvent E>
-    void dispatch_mouseEvent(E& e, MIMethod<E> method)
+    void dispatch_mouseEvent(const SDL_Event& e, MouseInteractorMethod method, MouseEventOffset auto offset)
     {
-        Coords::PixelCoordinates pos = {e.x, e.y};
+        Coords::PixelCoordinates pos = {(e.*offset).x, (e.*offset).y};
         Widget* widget = findWidgetAt(pos);
         MouseInteractor* miWidget = dynamic_cast<MouseInteractor*>(widget);
         if (miWidget)
@@ -177,7 +182,7 @@ namespace UiBase
 
     Widget* findWidgetAt(Coords::PixelCoordinates pos)
     {
-        for (auto widget :  std::views::reverse(widgets))
+        for (auto widget : std::views::reverse(widgets) | std::views::filter(&Widget::isVisible) | std::views::filter(&Widget::isActive))
         {
             Coords::PixelCoordinates upperLeft = widget->getPosition();
             Coords::PixelCoordinates lowerRight = upperLeft + widget->getSize() - Coords::PixelCoordinates {1, 1};
@@ -189,4 +194,6 @@ namespace UiBase
 
         return nullptr;
     }
+
+    // ====================================================================== //
 }

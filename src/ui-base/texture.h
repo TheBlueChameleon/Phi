@@ -16,16 +16,22 @@ namespace UiBase
             Coords::PixelCoordinates size = {0, 0};
 
         public:
+            Texture();
             Texture(SDL_Texture* texture);
+            Texture(const Coords::PixelCoordinates& size, int access = SDL_TEXTUREACCESS_STATIC);
+            Texture(const Texture& other);
             Texture(Texture&& other);
             ~Texture();
 
-            Texture& operator=(Texture&& other);
+            Texture& operator=(const Texture& other) = default;
+            Texture& operator=(Texture&& other) = default;
 
             static Texture fromFile(const std::string& path);
 
             SDL_Texture* expose();
             Coords::PixelCoordinates getSize() const;
+
+            void setAlpha(Uint8 alpha);
 
             void renderAt(Coords::PixelCoordinates upperLeft) const;
     };
