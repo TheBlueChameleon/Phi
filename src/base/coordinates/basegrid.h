@@ -5,7 +5,7 @@
 
 #include "grid.h"
 
-namespace Coords
+namespace Base
 {
     template<EitherScalarOrVector T>
     class BaseGrid : public Grid<T>
@@ -40,7 +40,6 @@ namespace Coords
             T& operator [](const PixelCoordinates& c);
             T& operator [](const RealCoordinates& c);
     };
-
 }
 
 #endif // BASEGRID_H

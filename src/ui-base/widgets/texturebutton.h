@@ -3,7 +3,7 @@
 
 #include <optional>
 
-#include "coords/coordinates.h"
+#include "base/coordinates/coordinate.h"
 
 #include "basewidget.h"
 #include "basemouseinteractor.h"
@@ -21,8 +21,8 @@ namespace UiBase
             std::optional<Texture> clicked;
 
         public:
-            TextureButton(Coords::PixelCoordinates pos, Texture&& texture);
-            static TextureButton fromFile(Coords::PixelCoordinates pos, const std::string& path);
+            TextureButton(Base::PixelCoordinates pos, Texture&& texture);
+            static TextureButton fromFile(Base::PixelCoordinates pos, const std::string& path);
 
             void setTextureNormal(const std::string& path);
             void setTextureMouseOver(const std::string& path);

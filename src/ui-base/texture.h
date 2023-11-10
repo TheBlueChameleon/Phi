@@ -5,7 +5,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "coords/coordinates.h"
+#include "base/coordinates/coordinate.h"
 
 namespace UiBase
 {
@@ -13,12 +13,12 @@ namespace UiBase
     {
         private:
             SDL_Texture* texture = nullptr;
-            Coords::PixelCoordinates size = {0, 0};
+            Base::PixelCoordinates size = {0, 0};
 
         public:
             Texture();
             Texture(SDL_Texture* texture);
-            Texture(const Coords::PixelCoordinates& size, int access = SDL_TEXTUREACCESS_STATIC);
+            Texture(const Base::PixelCoordinates& size, int access = SDL_TEXTUREACCESS_STATIC);
             Texture(const Texture& other);
             Texture(Texture&& other);
             ~Texture();
@@ -29,11 +29,11 @@ namespace UiBase
             static Texture fromFile(const std::string& path);
 
             SDL_Texture* expose();
-            Coords::PixelCoordinates getSize() const;
+            Base::PixelCoordinates getSize() const;
 
             void setAlpha(Uint8 alpha);
 
-            void renderAt(Coords::PixelCoordinates upperLeft) const;
+            void renderAt(Base::PixelCoordinates upperLeft) const;
     };
 }
 

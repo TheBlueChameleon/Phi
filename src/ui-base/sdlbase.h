@@ -14,7 +14,7 @@ namespace UiBase
     bool dispatch_events();
     void render_widgets();
 
-    Widget* findWidgetAt(Coords::PixelCoordinates pos);
+    Widget* findWidgetAt(Base::PixelCoordinates pos);
 }
 
 #endif // WINDOW_H

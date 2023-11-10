@@ -2,10 +2,9 @@
 
 #include "texturebutton.h"
 
+using namespace Base;
 namespace UiBase
 {
-    using namespace ::Coords;
-
     TextureButton::TextureButton(PixelCoordinates pos, Texture&& texture) :
         BaseWidget(pos, texture.getSize()),
         normal(std::move(texture))
@@ -52,9 +51,9 @@ namespace UiBase
         {
             case MouseButtonState::Normal:
                 {
-                    Coords::PixelCoordinates mousePos;
-                    Coords::PixelCoordinates upperLeft = this->getPosition();
-                    Coords::PixelCoordinates lowerRight = this->getPosition() + this->getSize() - Coords::PixelCoordinates{1,1};
+                    PixelCoordinates mousePos;
+                    PixelCoordinates upperLeft = this->getPosition();
+                    PixelCoordinates lowerRight = this->getPosition() + this->getSize() - PixelCoordinates{1,1};
                     SDL_GetMouseState(&mousePos.x, &mousePos.y);
 
                     if (isWithin(mousePos, upperLeft, lowerRight))

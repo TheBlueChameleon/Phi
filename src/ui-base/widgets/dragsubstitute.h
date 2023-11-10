@@ -13,13 +13,13 @@ namespace UiBase
         private:
             Widget& original;
             Texture texture;
-            Coords::PixelCoordinates mouseOffset;
+            Base::PixelCoordinates mouseOffset;
 
         public:
-            DragSubstitute(Widget& original, Coords::PixelCoordinates mouseOffset);
+            DragSubstitute(Widget& original, Base::PixelCoordinates mouseOffset);
             ~DragSubstitute();
 
-            Coords::PixelCoordinates getMouseOffset() const;
+            Base::PixelCoordinates getMouseOffset() const;
             Widget& getOriginal() const;
 
             // Widget interface

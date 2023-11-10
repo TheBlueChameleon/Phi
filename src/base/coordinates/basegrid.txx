@@ -1,13 +1,12 @@
 #ifndef BASEGRID_TXX
 #define BASEGRID_TXX
 
+#include "base/errors.h"
 #include "basegrid.h"
-#include "coordinates.h"
-#include <base/base.h>
+#include "coordinate.h"
 
-namespace Coords
+namespace Base
 {
-
     template<EitherScalarOrVector T>
     PixelCoordinates BaseGrid<T>::getPixelSize() const
     {

@@ -1,6 +1,6 @@
 #include "basegrid.txx"
 
-namespace Coords
+namespace Base
 {
     template class BaseGrid<Scalar>;
     template class BaseGrid<Vector>;

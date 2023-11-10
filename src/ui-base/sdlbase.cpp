@@ -11,13 +11,14 @@ using namespace std::string_literals;
 #include <SDL2/SDL_ttf.h>
 
 #include "base/base.h"
-#include "coords/coordinates.h"
+#include "base/coordinates/coordinate.h"
 
 #define SDL_PRIVATE
 #define UIBASE_PRIVATE
 #include "uibase.h"
 #include "ui-base/widgets/texturebutton.h"
 
+using namespace Base;
 namespace UiBase
 {
     void initUI(bool autoCallQuitUI)
@@ -171,7 +172,7 @@ namespace UiBase
 
     void dispatch_mouseEvent(const SDL_Event& e, MouseInteractorMethod method, MouseEventOffset auto offset)
     {
-        Coords::PixelCoordinates pos = {(e.*offset).x, (e.*offset).y};
+        PixelCoordinates pos = {(e.*offset).x, (e.*offset).y};
         Widget* widget = findWidgetAt(pos);
         MouseInteractor* miWidget = dynamic_cast<MouseInteractor*>(widget);
         if (miWidget)
@@ -180,13 +181,13 @@ namespace UiBase
         }
     }
 
-    Widget* findWidgetAt(Coords::PixelCoordinates pos)
+    Widget* findWidgetAt(Base::PixelCoordinates pos)
     {
         for (auto widget : std::views::reverse(widgets) | std::views::filter(&Widget::isVisible) | std::views::filter(&Widget::isActive))
         {
-            Coords::PixelCoordinates upperLeft = widget->getPosition();
-            Coords::PixelCoordinates lowerRight = upperLeft + widget->getSize() - Coords::PixelCoordinates {1, 1};
-            if (Coords::isWithin(pos, upperLeft, lowerRight))
+            PixelCoordinates upperLeft = widget->getPosition();
+            PixelCoordinates lowerRight = upperLeft + widget->getSize() - PixelCoordinates {1, 1};
+            if (isWithin(pos, upperLeft, lowerRight))
             {
                 return widget;
             }

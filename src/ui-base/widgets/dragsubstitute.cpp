@@ -1,9 +1,10 @@
 #include "dragsubstitute.h"
 #include <iostream>
 
+using namespace Base;
 namespace UiBase
 {
-    DragSubstitute::DragSubstitute(Widget& original, Coords::PixelCoordinates mouseOffset) :
+    DragSubstitute::DragSubstitute(Widget& original, PixelCoordinates mouseOffset) :
         BaseWidget(original.getPosition(), original.getSize()),
         original(original),
         texture(original.render()),
@@ -18,7 +19,7 @@ namespace UiBase
         std::cout << "kill the substitute @ " << this << std::endl;
     }
 
-    Coords::PixelCoordinates DragSubstitute::getMouseOffset() const
+    PixelCoordinates DragSubstitute::getMouseOffset() const
     {
         return mouseOffset;
     }

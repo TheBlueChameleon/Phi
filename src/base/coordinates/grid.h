@@ -1,14 +1,11 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include "base/base.h"
-#include "coordinates.h"
+#include "base/concepts.h"
+#include "coordinate.h"
 
-namespace Coords
+namespace Base
 {
-    template<typename T>
-    concept EitherScalarOrVector = Base::EitherOr<T, Scalar, Vector>;
-
     template<EitherScalarOrVector T>
     struct Grid
     {

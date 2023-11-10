@@ -5,13 +5,16 @@ using namespace std::string_literals;
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_surface.h>
 
+#include "base/errors.h"
+
 #include "surface.h"
 #define SDL_PRIVATE
 #include "globals.h"
 
+using namespace Base;
 namespace UiBase
 {
-    Surface::Surface(const Coords::PixelCoordinates& size) :
+    Surface::Surface(const PixelCoordinates& size) :
         size(size)
     {
         //(Uint32 flags, int width, int height, int depth, Uint32 format);

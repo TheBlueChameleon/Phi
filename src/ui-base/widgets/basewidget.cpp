@@ -3,9 +3,10 @@
 #define UIBASE_PRIVATE
 #include "ui-base/uibase.h"
 
+using namespace Base;
 namespace UiBase
 {
-    BaseWidget::BaseWidget(const Coords::PixelCoordinates& position, const Coords::PixelCoordinates& size) :
+    BaseWidget::BaseWidget(const PixelCoordinates& position, const PixelCoordinates& size) :
         position(position), size(size)
     {
         widgets.push_back(this);
@@ -47,22 +48,22 @@ namespace UiBase
         active = false;
     }
 
-    Coords::PixelCoordinates BaseWidget::getPosition() const
+    PixelCoordinates BaseWidget::getPosition() const
     {
         return position;
     }
 
-    void BaseWidget::setPosition(const Coords::PixelCoordinates& pos)
+    void BaseWidget::setPosition(const PixelCoordinates& pos)
     {
         position = pos;
     }
 
-    Coords::PixelCoordinates BaseWidget::getSize() const
+    PixelCoordinates BaseWidget::getSize() const
     {
         return size;
     }
 
-    void BaseWidget::setSize(const Coords::PixelCoordinates& newSize)
+    void BaseWidget::setSize(const PixelCoordinates& newSize)
     {
         size = newSize;
     }

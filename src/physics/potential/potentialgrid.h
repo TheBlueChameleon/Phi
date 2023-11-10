@@ -1,26 +1,26 @@
 #ifndef POTENTIALGRID_H
 #define POTENTIALGRID_H
 
-#include "coords/basegrid.h"
+#include "base/coordinates/basegrid.h"
 
 namespace Physics
 {
-    class PotentialGrid : public Coords::BaseGrid<Coords::Scalar>
+    class PotentialGrid : public Base::BaseGrid<Base::Scalar>
     {
 
         private:
-            void imposeImpl_noAcceleration(const PotentialGrid& potential, const Coords::PixelCoordinates& minIdxs, const Coords::PixelCoordinates& maxIdxs, const Coords::PixelCoordinates& startIdxs);
-            void imposeImpl_avxAccelerated(const PotentialGrid& potential, const Coords::PixelCoordinates& minIdxs, const Coords::PixelCoordinates& maxIdxs, const Coords::PixelCoordinates& startIdxs);
+            void imposeImpl_noAcceleration(const PotentialGrid& potential, const Base::PixelCoordinates& minIdxs, const Base::PixelCoordinates& maxIdxs, const Base::PixelCoordinates& startIdxs);
+            void imposeImpl_avxAccelerated(const PotentialGrid& potential, const Base::PixelCoordinates& minIdxs, const Base::PixelCoordinates& maxIdxs, const Base::PixelCoordinates& startIdxs);
 
         public:
             PotentialGrid();
-            PotentialGrid(Coords::PixelCoordinates size, Coords::Real gridConstant, Coords::Real level = 0);
+            PotentialGrid(Base::PixelCoordinates size, Base::Real gridConstant, Base::Real level = 0);
 
-            Coords::PixelCoordinates getMinimumImposeIndices(const PotentialGrid& potential, const Coords::PixelCoordinates at) const;
-            Coords::PixelCoordinates getMaximumImposeIndices(const PotentialGrid& potential, const Coords::PixelCoordinates at) const;
+            Base::PixelCoordinates getMinimumImposeIndices(const PotentialGrid& potential, const Base::PixelCoordinates at) const;
+            Base::PixelCoordinates getMaximumImposeIndices(const PotentialGrid& potential, const Base::PixelCoordinates at) const;
 
-            void imposeAt(const PotentialGrid& potential, const Coords::RealCoordinates  at);
-            void imposeAt(const PotentialGrid& potential, const Coords::PixelCoordinates at);
+            void imposeAt(const PotentialGrid& potential, const Base::RealCoordinates  at);
+            void imposeAt(const PotentialGrid& potential, const Base::PixelCoordinates at);
 
             std::string to_string() const;
     };

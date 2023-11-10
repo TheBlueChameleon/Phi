@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "coords/coordinates.h"
+#include "base/coordinates/coordinate.h"
 
 #include "texture.h"
 
@@ -13,10 +13,10 @@ namespace UiBase
     {
         private:
             SDL_Surface* surface = nullptr;
-            Coords::PixelCoordinates size = {0, 0};
+            Base::PixelCoordinates size = {0, 0};
 
         public:
-            Surface(const Coords::PixelCoordinates& size);
+            Surface(const Base::PixelCoordinates& size);
             Surface(SDL_Surface* surface);
             ~Surface();
 

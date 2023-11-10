@@ -1,9 +1,9 @@
-#include "coordinates.txx"
+#include "coordinate.txx"
 
-namespace Coords
+namespace Base
 {
-    template struct Coordinates<Pixel>;
-    template struct Coordinates<Real>;
+    template struct Coordinate<Pixel>;
+    template struct Coordinate<Real>;
 
     template PixelCoordinates min(const PixelCoordinates& a, const PixelCoordinates& b);
     template PixelCoordinates max(const PixelCoordinates& a, const PixelCoordinates& b);
@@ -15,7 +15,7 @@ namespace Coords
     template std::array<Real,  4> getRectSorted(const  RealCoordinates& boundary1, const  RealCoordinates& boundary2);
 
     template bool isWithin<Pixel>(const PixelCoordinates& point, const PixelCoordinates& boundary1, const PixelCoordinates& boundary2);
-    template bool isWithin<Real>(const Coordinates<Real>& point, const Coordinates<Real>& boundary1, const Coordinates<Real>& boundary2);
+    template bool isWithin<Real>(const Coordinate<Real>& point, const Coordinate<Real>& boundary1, const Coordinate<Real>& boundary2);
 
     PixelCoordinates toPixelCoordinates(const RealCoordinates& c, Real gridConstant)
     {

@@ -16,10 +16,6 @@ namespace Base
 
     DEF_ERROR(KeyError);
     DEF_ERROR(MemoryManagementError);
-}
-
-namespace Coords
-{
     DEF_ERROR(DimensionError);
     DEF_ERROR(CoordinatesError);
 }

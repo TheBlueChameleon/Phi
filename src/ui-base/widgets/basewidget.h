@@ -10,11 +10,11 @@ namespace UiBase
         private:
             bool visible = true;
             bool active = true;
-            Coords::PixelCoordinates position;
-            Coords::PixelCoordinates size;
+            Base::PixelCoordinates position;
+            Base::PixelCoordinates size;
 
         public:
-            BaseWidget(const Coords::PixelCoordinates& position, const Coords::PixelCoordinates& size);
+            BaseWidget(const Base::PixelCoordinates& position, const Base::PixelCoordinates& size);
             ~BaseWidget();
 
             // Widget interface
@@ -26,10 +26,10 @@ namespace UiBase
             void makeActive();
             void makeInactive();
 
-            Coords::PixelCoordinates getPosition() const;
-            void setPosition(const Coords::PixelCoordinates& pos);
-            Coords::PixelCoordinates getSize() const;
-            void setSize(const Coords::PixelCoordinates& size);
+            Base::PixelCoordinates getPosition() const;
+            void setPosition(const Base::PixelCoordinates& pos);
+            Base::PixelCoordinates getSize() const;
+            void setSize(const Base::PixelCoordinates& size);
     };
 }
 

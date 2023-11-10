@@ -1,7 +1,7 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include "coords/coordinates.h"
+#include "base/coordinates/coordinate.h"
 #include "ui-base/texture.h"
 
 namespace UiBase
@@ -16,10 +16,10 @@ namespace UiBase
         virtual void makeActive() = 0;
         virtual void makeInactive() = 0;
 
-        virtual Coords::PixelCoordinates getPosition() const = 0;
-        virtual void setPosition(const Coords::PixelCoordinates& pos) = 0;
-        virtual Coords::PixelCoordinates getSize() const = 0;
-        virtual void setSize(const Coords::PixelCoordinates& pos) = 0;
+        virtual Base::PixelCoordinates getPosition() const = 0;
+        virtual void setPosition(const Base::PixelCoordinates& pos) = 0;
+        virtual Base::PixelCoordinates getSize() const = 0;
+        virtual void setSize(const Base::PixelCoordinates& pos) = 0;
 
         virtual const Texture& render() const = 0;
     };

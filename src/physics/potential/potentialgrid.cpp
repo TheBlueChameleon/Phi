@@ -6,7 +6,7 @@
 
 #include "potentialgrid.h"
 
-using namespace Coords;
+using namespace Base;
 namespace Physics
 {
     PotentialGrid::PotentialGrid() : BaseGrid<Scalar>({0,0}, 0) {}
@@ -16,7 +16,7 @@ namespace Physics
         std::fill(values.begin(), values.end(), level);
     }
 
-    template<Coords::EitherScalarOrVector T>
+    template<Base::EitherScalarOrVector T>
     T negativeReLU(T x)
     {
         return x >= 0 ? 0 : - x;

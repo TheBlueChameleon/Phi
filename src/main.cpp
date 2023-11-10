@@ -1,13 +1,12 @@
 #include <iostream>
 
 #include "base/base.h"
-#include "coords/coords.h"
 #include "physics/physics.h"
 #include "ui-base/uibase.h"
 
 void show_physics()
 {
-    using namespace Coords;
+    using namespace Base;
     using namespace Physics;
 
     const auto gf = GridFactory({50, 10}, 1);
@@ -28,9 +27,10 @@ void show_physics()
 void show_uibase()
 {
     using namespace UiBase;
+    using namespace Base;
 
     initUI();
-    TextureButton b = TextureButton::fromFile(Coords::PixelCoordinates{150,50}, "res/btn_blue.png");
+    TextureButton b = TextureButton::fromFile(PixelCoordinates{150,50}, "res/btn_blue.png");
     b.setTextureClicked("res/btn_red.png");
     b.setTextureMouseOver("res/btn_green.png");
 

@@ -80,29 +80,14 @@ include_directories(${GTestIncludes})
 
 add_library(Phi-base STATIC
     src/base/base.h
-
     src/base/errors.h src/base/errors.cpp
+    src/base/coordinates/grid.h
+    src/base/coordinates/coordinate.h    src/base/coordinates/coordinate.txx  src/base/coordinates/coordinate.cpp
+    src/base/coordinates/basegrid.h       src/base/coordinates/basegrid.txx     src/base/coordinates/basegrid.cpp
 )
 
 target_include_directories(Phi-base PUBLIC
     src/
-)
-
-# ............................................................................ #
-
-add_library(Phi-coords STATIC
-    src/coords/coords.h
-    src/coords/coordinates.h    src/coords/coordinates.txx  src/coords/coordinates.cpp
-    src/coords/grid.h
-    src/coords/basegrid.h       src/coords/basegrid.txx     src/coords/basegrid.cpp
-)
-
-target_include_directories(Phi-coords PUBLIC
-    src/
-)
-
-target_link_libraries(Phi-coords
-    Phi-base
 )
 
 # ............................................................................ #
@@ -125,6 +110,7 @@ endif()
 
 add_library(Phi-uibase STATIC
     src/ui-base/uibase.h
+
     src/ui-base/globals.h src/ui-base/globals.cpp
     src/ui-base/sdlbase.h src/ui-base/sdlbase.cpp
     src/ui-base/texture.h src/ui-base/texture.cpp
@@ -167,7 +153,6 @@ target_include_directories(Phi-game PUBLIC
 
 target_link_libraries(Phi-game
     Phi-base
-    Phi-coords
     Phi-physics
     Phi-uibase
 )
@@ -192,7 +177,6 @@ target_include_directories(Phi-unittest
 target_link_libraries(Phi-unittest
     PRIVATE Threads::Threads
     PRIVATE Phi-base
-    PRIVATE Phi-coords
     PRIVATE Phi-physics
 )
 

@@ -1,7 +1,7 @@
 #ifndef GRIDFACTORY_H
 #define GRIDFACTORY_H
 
-#include "coords/coordinates.h"
+#include "base/coordinates/coordinate.h"
 #include "potential/potentialgrid.h"
 
 namespace Physics
@@ -9,17 +9,17 @@ namespace Physics
     class GridFactory
     {
         private:
-            static const Coords::PixelCoordinates USE_DEFAULT;
+            static const Base::PixelCoordinates USE_DEFAULT;
 
-            Coords::PixelCoordinates size;
-            Coords::Real gridConstant;
+            Base::PixelCoordinates size;
+            Base::Real gridConstant;
 
         public:
-            GridFactory(Coords::PixelCoordinates size, Coords::Real gridConstant);
+            GridFactory(Base::PixelCoordinates size, Base::Real gridConstant);
 
             PotentialGrid makeWorld() const;
-            PotentialGrid makeOverlayAtConstantLevel(Coords::Real level, Coords::PixelCoordinates size = USE_DEFAULT) const;
-            PotentialGrid makeOverlayFromCharge(Coords::Real charge, Coords::Real cutoff = 0.1) const;
+            PotentialGrid makeOverlayAtConstantLevel(Base::Real level, Base::PixelCoordinates size = USE_DEFAULT) const;
+            PotentialGrid makeOverlayFromCharge(Base::Real charge, Base::Real cutoff = 0.1) const;
     };
 }
 

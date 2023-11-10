@@ -7,12 +7,12 @@ using namespace std::string_literals;
 #define SDL_PRIVATE
 #include "uibase.h"
 
-using namespace Coords;
+using namespace Base;
 
 namespace UiBase
 {
     Texture::Texture() :
-        size(Coords::PixelCoordinates {0,0}),
+        size(PixelCoordinates {0,0}),
         texture(nullptr)
     {}
 
@@ -24,7 +24,7 @@ namespace UiBase
         this->size = size;
     }
 
-    Texture::Texture(const Coords::PixelCoordinates& size, int access) :
+    Texture::Texture(const PixelCoordinates& size, int access) :
         size(size)
     {
         // TODO sanity check on size
@@ -81,7 +81,7 @@ namespace UiBase
         return Texture(newTexture);
     }
 
-    Coords::PixelCoordinates Texture::getSize() const
+    PixelCoordinates Texture::getSize() const
     {
         return size;
     }
