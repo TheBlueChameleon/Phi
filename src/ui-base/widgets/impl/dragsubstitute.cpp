@@ -12,12 +12,6 @@ namespace UiBase
         mouseOffset(mouseOffset)
     {
         texture.setAlpha(127);
-        std::cout << "DragSubstitute CTor: " << this << std::endl;
-    }
-
-    DragSubstitute::~DragSubstitute()
-    {
-        std::cout << "kill the substitute @ " << this << std::endl;
     }
 
     PixelCoordinates DragSubstitute::getMouseOffset() const

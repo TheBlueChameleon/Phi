@@ -112,18 +112,17 @@ add_library(Phi-uibase STATIC
     src/ui-base/ui-base.h
 
     src/ui-base/base/callbacks.h
-    src/ui-base/base/defaulteventdispatcher.h src/ui-base/base/defaulteventdispatcher.cpp
     src/ui-base/base/eventdispatcher.h
-    src/ui-base/base/runtimeenvironment.h src/ui-base/base/runtimeenvironment.cpp
-    src/ui-base/base/runtimeenvironmentuser.h src/ui-base/base/runtimeenvironmentuser.cpp
+    src/ui-base/base/defaulteventdispatcher.h src/ui-base/base/defaulteventdispatcher.cpp
+    src/ui-base/base/runtimeenvironment.h       src/ui-base/base/runtimeenvironment.cpp
+    src/ui-base/base/runtimeenvironmentuser.h   src/ui-base/base/runtimeenvironmentuser.cpp
     src/ui-base/base/texture.h src/ui-base/base/texture.cpp
     src/ui-base/base/surface.h src/ui-base/base/surface.cpp
 
     src/ui-base/widgets/widget.h
-    src/ui-base/widgets/impl/basewidget.h src/ui-base/widgets/impl/basewidget.cpp
-
-    src/ui-base/widgets/dragsubstitute.h src/ui-base/widgets/dragsubstitute.cpp
-    src/ui-base/widgets/texturebutton.h src/ui-base/widgets/texturebutton.cpp
+    src/ui-base/widgets/impl/basewidget.h       src/ui-base/widgets/impl/basewidget.cpp
+    src/ui-base/widgets/impl/dragsubstitute.h   src/ui-base/widgets/impl/dragsubstitute.cpp
+    src/ui-base/widgets/impl/texturebutton.h    src/ui-base/widgets/impl/texturebutton.cpp
 )
 
 target_include_directories(Phi-uibase PUBLIC

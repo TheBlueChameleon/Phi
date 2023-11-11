@@ -67,7 +67,6 @@ namespace UiBase
 
         if (!instance.initCalled)
         {
-            std::cout << "call from getInstance" << std::endl;
             instance.init();
         }
         return instance;

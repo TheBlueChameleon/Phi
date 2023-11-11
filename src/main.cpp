@@ -30,7 +30,6 @@ void show_uibase()
     using namespace UiBase;
 
     auto& rte = RuntimeEnvironment::getInstance();
-    std::cout << "RTE instantiated at " << &rte << std::endl;
     TextureButton b = TextureButton::fromFile(PixelCoordinates{150,50}, "res/btn_blue.png");
     b.setTextureClicked(Texture::fromFile("res/btn_red.png"));
     b.setTextureMouseOver(Texture::fromFile("res/btn_green.png"));
@@ -40,10 +39,6 @@ void show_uibase()
     {
         std::cout << "callback triggered" << std::endl;
     });
-    std::cout << "button instantiated" << std::endl;
-    std::cout << "  " << b.getSize().to_string() << std::endl;
-
-    std::cout << "passing to mainloop" << std::endl;
 
     rte.mainloop();
 }

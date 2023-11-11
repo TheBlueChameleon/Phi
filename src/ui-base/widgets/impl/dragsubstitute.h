@@ -15,7 +15,6 @@ namespace UiBase
 
         public:
             DragSubstitute(Widget& original, Base::PixelCoordinates mouseOffset);
-            ~DragSubstitute();
 
             Base::PixelCoordinates getMouseOffset() const;
             Widget& getOriginal() const;

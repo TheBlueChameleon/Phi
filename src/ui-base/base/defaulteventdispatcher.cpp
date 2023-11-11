@@ -1,12 +1,11 @@
 #include <iostream>
-
-#include "defaulteventdispatcher.h"
-#include "ui-base/widgets/dragsubstitute.h"
+#include <string>
+using namespace std::string_literals;
 
 #include <SDL2/SDL.h>
 
-#include <string>
-using namespace std::string_literals;
+#include "defaulteventdispatcher.h"
+#include "ui-base/widgets/impl/dragsubstitute.h"
 
 using namespace Base;
 
@@ -40,7 +39,6 @@ namespace UiBase
     {
         mode = newMode;
         modeTarget = newTarget;
-        std::cout << "mode: " << static_cast<int>(mode) << std::endl;
     }
 
     void DefaultEventDispatcher::restoreNormalMode(const SDL_Event& e)

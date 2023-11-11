@@ -8,8 +8,8 @@
 #include "base/texture.h"
 
 #include "widgets/widget.h"
-#include "widgets/dragsubstitute.h"
-#include "widgets/texturebutton.h"
+#include "widgets/impl/dragsubstitute.h"
+#include "widgets/impl/texturebutton.h"
 
 #endif
 
