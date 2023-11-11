@@ -26,7 +26,7 @@ namespace UiBase
             ~Texture();
 
             Texture& operator=(const Texture& other);
-            Texture& operator=(Texture&& other) = default;
+            Texture& operator=(Texture&& other);
 
             static Texture fromFile(const std::string& path);
 

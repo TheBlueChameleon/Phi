@@ -117,6 +117,7 @@ add_library(Phi-uibase STATIC
     src/ui-base/base/runtimeenvironment.h       src/ui-base/base/runtimeenvironment.cpp
     src/ui-base/base/runtimeenvironmentuser.h   src/ui-base/base/runtimeenvironmentuser.cpp
     src/ui-base/base/texture.h src/ui-base/base/texture.cpp
+    src/ui-base/base/sdlutil.h src/ui-base/base/sdlutil.cpp
     src/ui-base/base/surface.h src/ui-base/base/surface.cpp
 
     src/ui-base/widgets/widget.h
@@ -162,8 +163,13 @@ target_link_libraries(Phi-game
 
 add_executable(Phi-unittest
     unittest/main.cpp
+
     unittest/physics/gridfactory.cpp
     unittest/physics/potential/potentialgrid.cpp
+
+    unittest/ui-base/uibase.cpp
+    unittest/ui-base/base/texture.cpp
+
     ${GTestFiles}
 )
 
@@ -178,6 +184,7 @@ target_link_libraries(Phi-unittest
     PRIVATE Threads::Threads
     PRIVATE Phi-base
     PRIVATE Phi-physics
+    PRIVATE Phi-uibase
 )
 
 # ============================================================================ #

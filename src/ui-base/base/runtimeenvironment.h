@@ -59,6 +59,10 @@ namespace UiBase
             int getScrenHeight() const;
             const char* getWindowTitle() const;
 
+            void hideWindow();
+            void showWindow();
+            bool isWindowShown() const;
+
             void loadFont(const std::string& path, int size, const std::string& ID);
 
             void mainloop();

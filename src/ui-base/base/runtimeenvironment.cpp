@@ -8,10 +8,12 @@ using namespace std::string_literals;
 
 #define UIBASE_PRIVATE
 #include "runtimeenvironment.h"
+#include "ui-base/base/sdlutil.h"
 #include "ui-base/widgets/widget.h"
 #include "ui-base/base/defaulteventdispatcher.h"
 
 using namespace Base;
+using namespace SdlUtil;
 
 namespace UiBase
 {
@@ -21,10 +23,7 @@ namespace UiBase
     {
         initCalled = true;
 
-        if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-        {
-            throw SdlError("SDL could not initialize! SDL Error:\n"s + SDL_GetError());
-        }
+        throwSdlErrorIfErrCode(SDL_Init(SDL_INIT_EVERYTHING), "SDL could not initialize!");
 
         if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
         {
@@ -39,18 +38,12 @@ namespace UiBase
                      screenHeight,
                      SDL_WINDOW_SHOWN
                  );
-        if (window == NULL)
-        {
-            throw SdlError("Window could not be created! SDL Error:\n"s + SDL_GetError());
-        }
+        throwSdlErrorIfNullptr(window, "Window could not be created!");
 
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        if (renderer == NULL)
-        {
-            throw SdlError("Renderer could not be created! SDL Error:\n"s + SDL_GetError());
-        }
-        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        throwSdlErrorIfNullptr(renderer, "Renderer could not be created!");
+        throwSdlErrorIfErrCode(SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF), "Could not set draw color");
+        throwSdlErrorIfErrCode(SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND), "Could not set blend mode");
 
         int imgFlags = IMG_INIT_PNG;
         if (!(IMG_Init(imgFlags) & imgFlags))
@@ -131,6 +124,21 @@ namespace UiBase
     const char* RuntimeEnvironment::getWindowTitle() const
     {
         return windowTitle;
+    }
+
+    void RuntimeEnvironment::hideWindow()
+    {
+        SDL_HideWindow(window);
+    }
+
+    void RuntimeEnvironment::showWindow()
+    {
+        SDL_ShowWindow(window);
+    }
+
+    bool RuntimeEnvironment::isWindowShown() const
+    {
+        return SDL_GetWindowFlags(window) & SDL_WINDOW_SHOWN;
     }
 
     void RuntimeEnvironment::loadFont(const std::string& path, int size, const std::string& ID)
