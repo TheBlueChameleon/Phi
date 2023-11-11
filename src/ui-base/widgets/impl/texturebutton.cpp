@@ -12,31 +12,71 @@ namespace UiBase
 
     TextureButton TextureButton::fromFile(PixelCoordinates pos, const std::string& path)
     {
-        Texture t(Texture::fromFile(path));
-        return TextureButton(pos, std::move(t));
+        return TextureButton(pos, Texture::fromFile(path));
     }
 
     void TextureButton::setTextureNormal(const Texture& texture)
     {
         normal = texture;
         setSize(normal.getSize());
+        clearIfNonMatchingSize();
+    }
+
+    void TextureButton::setTextureNormal(Texture&& texture)
+    {
+        normal = std::move(texture);
+        setSize(normal.getSize());
+        clearIfNonMatchingSize();
+    }
+
+    void TextureButton::throwIfNonMatchingSize(const Texture& other) const
+    {
+        if (normal.getSize() != other.getSize())
+        {
+            throw DimensionError("Dimensions of default texture and alternative do not match!");
+        }
+    }
+
+    void TextureButton::clearIfNonMatchingSize()
+    {
+        if (clicked.has_value() && normal.getSize() != clicked.value().getSize())
+        {
+            clearTextureClicked();
+        }
+
+        if (mouseOver.has_value() && normal.getSize() != mouseOver.value().getSize())
+        {
+            clearTextureMouseOver();
+        }
     }
 
     void TextureButton::setTextureMouseOver(const Texture& texture)
     {
-        // TODO: size check
+        throwIfNonMatchingSize(texture);
         mouseOver = texture;
+    }
+
+    void TextureButton::setTextureMouseOver(Texture&& texture)
+    {
+        throwIfNonMatchingSize(texture);
+        mouseOver = std::move(texture);
     }
 
     void TextureButton::clearTextureMouseOver()
     {
-        // TODO: size check
         mouseOver.reset();
     }
 
     void TextureButton::setTextureClicked(const Texture& texture)
     {
+        throwIfNonMatchingSize(texture);
         clicked = texture;
+    }
+
+    void TextureButton::setTextureClicked(Texture&& texture)
+    {
+        throwIfNonMatchingSize(texture);
+        clicked = std::move(texture);
     }
 
     void TextureButton::clearTextureClicked()

@@ -106,8 +106,7 @@ namespace UiBase
 
     void Texture::setAlpha(Uint8 alpha)
     {
-        // TODO handle return value = error code
-        SDL_SetTextureAlphaMod(texture, alpha);
+        throwSdlErrorIfErrCode(SDL_SetTextureAlphaMod(texture, alpha), "Could not set alpha level");
     }
 
     SDL_Texture* Texture::expose()
@@ -118,6 +117,9 @@ namespace UiBase
     void Texture::renderAt(PixelCoordinates upperLeft) const
     {
         SDL_Rect rect = {upperLeft.x, upperLeft.y, size.x, size.y};
-        SDL_RenderCopy(rte.getRenderer(), texture, NULL, &rect);
+        throwSdlErrorIfErrCode(SDL_RenderCopy(
+                                   rte.getRenderer(), texture,
+                                   NULL, &rect
+                               ), "Could not render to screen");
     }
 }
