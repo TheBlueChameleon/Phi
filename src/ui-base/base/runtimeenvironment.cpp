@@ -2,8 +2,6 @@
 #include <ranges>
 #include <string>
 
-using namespace std::string_literals;
-
 #include "base/errors.h"
 
 #define UIBASE_PRIVATE
@@ -11,6 +9,8 @@ using namespace std::string_literals;
 #include "ui-base/base/sdlutil.h"
 #include "ui-base/widgets/widget.h"
 #include "ui-base/base/defaulteventdispatcher.h"
+
+#include "ui-base/base/surface.h"
 
 using namespace Base;
 using namespace SdlUtil;
@@ -23,7 +23,7 @@ namespace UiBase
     {
         initCalled = true;
 
-        throwSdlErrorIfErrCode(SDL_Init(SDL_INIT_EVERYTHING), "SDL could not initialize!");
+        throwSdlErrorIfErrCode(SDL_Init(SDL_INIT_EVERYTHING), "SDL could not be initialized!");
 
         if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
         {
@@ -36,20 +36,18 @@ namespace UiBase
                      SDL_WINDOWPOS_UNDEFINED,
                      screenWidth,
                      screenHeight,
-                     SDL_WINDOW_SHOWN
+                     SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL
                  );
         throwSdlErrorIfNullptr(window, "Window could not be created!");
 
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
         throwSdlErrorIfNullptr(renderer, "Renderer could not be created!");
-        throwSdlErrorIfErrCode(SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF), "Could not set draw color");
-        throwSdlErrorIfErrCode(SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND), "Could not set blend mode");
+        resetRenderer();
 
         int imgFlags = IMG_INIT_PNG;
-        if (!(IMG_Init(imgFlags) & imgFlags))
-        {
-            throw SdlError("SDL_image could not initialize! SDL_image Error:\n"s + IMG_GetError());
-        }
+        throwSdlErrorIfErrCode(!(IMG_Init(imgFlags) & imgFlags), "SDL_image could not be initialized!");
+
+        throwSdlErrorIfErrCode(TTF_Init(), "SDL_ttf could not be initialized!");
 
         eventDispatcher = new DefaultEventDispatcher();
     }
@@ -88,6 +86,12 @@ namespace UiBase
     SDL_Renderer* RuntimeEnvironment::getRenderer() const
     {
         return renderer;
+    }
+
+    void RuntimeEnvironment::resetRenderer()
+    {
+        throwSdlErrorIfErrCode(SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF), "Could not set draw color");
+        throwSdlErrorIfErrCode(SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND), "Could not set blend mode");
     }
 
     EventDispatcher& RuntimeEnvironment::getEventDispatcher()
@@ -151,7 +155,7 @@ namespace UiBase
         auto fontPtr = TTF_OpenFont(path.c_str(), size);
         if (!fontPtr)
         {
-            throw SdlError("Could not load font '"s + path + "'");
+            throw SdlError("Could not load font '" + path + "'");
         }
 
         auto [it, success] = fonts.emplace(ID, fontPtr);
@@ -162,12 +166,36 @@ namespace UiBase
         }
     }
 
+    TTF_Font* RuntimeEnvironment::getFont(const std::string& ID) const
+    {
+        return fonts.at(ID);
+    }
+
     void RuntimeEnvironment::mainloop()
     {
+        Surface rainbow({256, 50}, 0);
+        for (auto y = 0; y < 50; ++y)
+        {
+            for (auto x = 0; x < 256; ++x)
+            {
+                rainbow.pixelAt(x, y) = (x << 16) + ((x & 0xFE) << 7) + ((x & 0xFC) >> 1);
+            }
+        }
+        Texture fooThyBars = Surface::fromText("foo thy bars", "mono16", SdlColors::green).toTexture();
+        Texture flow = rainbow.toTexture();
+        Texture direct = Surface::fromText("foo thy bars", "mono16").toTexture(SDL_TEXTUREACCESS_STATIC);
+        fooThyBars.renderOntoCentered(flow);
+
         do
         {
+            resetRenderer();
             SDL_RenderClear(renderer);
             render_widgets();
+
+            flow.renderAt({200, 200});
+            fooThyBars.renderAt({200, 260});
+            direct.renderAt({200, 280});
+
             SDL_RenderPresent(renderer);
         }
         while (eventDispatcher->dispatchEvents());

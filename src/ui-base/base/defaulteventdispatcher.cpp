@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-using namespace std::string_literals;
 
 #include <SDL2/SDL.h>
 
@@ -23,7 +22,7 @@ namespace UiBase
                 case EventDispatcherMode::DragAndDrop:
                     return dispatchDragAndDropMode(e);
                 default:
-                    throw std::runtime_error("invalid mode in dispatch_events: "s + std::to_string(static_cast<int>(mode)));
+                    throw std::runtime_error("invalid mode in dispatch_events: " + std::to_string(static_cast<int>(mode)));
             }
         }
 

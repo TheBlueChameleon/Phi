@@ -47,6 +47,8 @@ namespace UiBase
             SDL_Window* getWindow() const;
             SDL_Renderer* getRenderer() const;
 
+            void resetRenderer();
+
             EventDispatcher& getEventDispatcher();
             void replaceEventDispatcher(EventDispatcher* newEventDispatcher);
 
@@ -64,6 +66,7 @@ namespace UiBase
             bool isWindowShown() const;
 
             void loadFont(const std::string& path, int size, const std::string& ID);
+            TTF_Font* getFont(const std::string& ID) const;
 
             void mainloop();
             void render_widgets();

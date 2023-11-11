@@ -25,5 +25,4 @@ namespace SdlUtil
             throw UiBase::SdlError(getSdlErrorText(context));
         }
     }
-
 }

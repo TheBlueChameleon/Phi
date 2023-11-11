@@ -8,6 +8,7 @@
 #include "base/coordinates/coordinate.h"
 
 #include "runtimeenvironmentuser.h"
+#include "ui-base/base/sdlutil.h"
 
 namespace UiBase
 {
@@ -18,9 +19,9 @@ namespace UiBase
             Base::PixelCoordinates size = {0, 0};
 
         public:
-            Texture();
+            Texture() = default;
             Texture(SDL_Texture* texture);
-            Texture(const Base::PixelCoordinates& size, int access = SDL_TEXTUREACCESS_STATIC);
+            Texture(const Base::PixelCoordinates& size, int access = SDL_TEXTUREACCESS_TARGET);
             Texture(const Texture& other);
             Texture(Texture&& other);
             ~Texture();
@@ -36,6 +37,8 @@ namespace UiBase
             void setAlpha(Uint8 alpha);
 
             void renderAt(Base::PixelCoordinates upperLeft) const;
+            void renderOnto(Texture& target, Base::PixelCoordinates upperLeft) const;
+            void renderOntoCentered(Texture& target) const;
     };
 }
 

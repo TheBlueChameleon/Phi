@@ -30,10 +30,14 @@ void show_uibase()
     using namespace UiBase;
 
     auto& rte = RuntimeEnvironment::getInstance();
+
+    rte.loadFont("res/FreeMono.ttf", 16, "mono16");
+
     TextureButton b = TextureButton::fromFile(PixelCoordinates{150,50}, "res/btn_blue.png");
     b.setTextureClicked(Texture::fromFile("res/btn_red.png"));
     b.setTextureMouseOver(Texture::fromFile("res/btn_green.png"));
     b.makeDragDropCapable();
+
     TextureButton c = TextureButton::fromFile(PixelCoordinates{350,50}, "res/btn_blue.png");
     c.setEventHandler(Callbacks::Clicked, [](const SDL_Event& e)
     {
