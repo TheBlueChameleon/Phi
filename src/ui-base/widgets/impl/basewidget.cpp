@@ -145,6 +145,18 @@ namespace UiBase
         mouseOver = true;
     }
 
+    void BaseWidget::onDrag(const SDL_Event& e)
+    {
+        std::cout << "drag " << this << std::endl;
+        invokeOptionalCallback(Callbacks::Dragged, e);
+    }
+
+    void BaseWidget::onDrop(const SDL_Event& e)
+    {
+        std::cout << "drop " << this << std::endl;
+        invokeOptionalCallback(Callbacks::Dropped, e);
+    }
+
     void BaseWidget::onMouseWheel(const SDL_Event& e)
     {
 

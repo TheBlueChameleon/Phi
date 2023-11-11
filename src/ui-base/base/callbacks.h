@@ -7,7 +7,7 @@ namespace UiBase
     {
         MouseOver,
         Clicked,
-        Draged,
+        Dragged,
         Dropped,
         ScrolledHorizontally,
         ScrolledVertically

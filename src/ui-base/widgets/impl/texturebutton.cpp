@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "texturebutton.h"
 
 using namespace Base;

@@ -57,6 +57,8 @@ namespace UiBase
             void onMouseMotion(const SDL_Event& e);
             void onLostMouseOver(const SDL_Event& e);
             void onGainMouseOver(const SDL_Event& e);
+            void onDrag(const SDL_Event& e);
+            void onDrop(const SDL_Event& e);
             void onMouseWheel(const SDL_Event& e);
 
             const std::function<void(const SDL_Event&)>& getEventHandler(const Callbacks id);

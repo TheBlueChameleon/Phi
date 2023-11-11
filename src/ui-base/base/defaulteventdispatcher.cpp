@@ -173,7 +173,7 @@ namespace UiBase
 
     void DefaultEventDispatcher::enterDragAndDropMode(const SDL_Event& e, Widget* draggedWidget)
     {
-        // TODO: original.onBeginDragAndDrop(e);
+        draggedWidget->onDrag(e);
 
         const auto& em = e.motion;
         PixelCoordinates mousePosition = {em.x, em.y};
@@ -190,7 +190,7 @@ namespace UiBase
         {
             Widget& original = substitutePtr->getOriginal();
             original.onLostMouseOver(e);
-            // TODO: original.onEndDragAndDrop(e);
+            original.onDrop(e);
         }
         delete modeTarget;
         restoreNormalMode(e);
