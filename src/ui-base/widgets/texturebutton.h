@@ -5,15 +5,13 @@
 
 #include "base/coordinates/coordinate.h"
 
-#include "basewidget.h"
-#include "basemouseinteractor.h"
-#include "../texture.h"
+#include "ui-base/base/texture.h"
+#include "ui-base/widgets/impl/basewidget.h"
 
 namespace UiBase
 {
     class TextureButton :
-        public BaseWidget,
-        public BaseMouseInteractor
+        public BaseWidget
     {
         private:
             Texture normal;
@@ -24,10 +22,10 @@ namespace UiBase
             TextureButton(Base::PixelCoordinates pos, Texture&& texture);
             static TextureButton fromFile(Base::PixelCoordinates pos, const std::string& path);
 
-            void setTextureNormal(const std::string& path);
-            void setTextureMouseOver(const std::string& path);
+            void setTextureNormal(const Texture& texture);
+            void setTextureMouseOver(const Texture& texture);
             void clearTextureMouseOver();
-            void setTextureClicked(const std::string& path);
+            void setTextureClicked(const Texture& texture);
             void clearTextureClicked();
 
             // Widget interface

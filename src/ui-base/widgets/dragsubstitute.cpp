@@ -1,5 +1,6 @@
-#include "dragsubstitute.h"
 #include <iostream>
+
+#include "dragsubstitute.h"
 
 using namespace Base;
 namespace UiBase
@@ -11,7 +12,7 @@ namespace UiBase
         mouseOffset(mouseOffset)
     {
         texture.setAlpha(127);
-        setMouseButtonState(MouseButtonState::Dragged);
+        std::cout << "DragSubstitute CTor: " << this << std::endl;
     }
 
     DragSubstitute::~DragSubstitute()

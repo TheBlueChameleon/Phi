@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "texturebutton.h"
 
 using namespace Base;
@@ -16,16 +14,16 @@ namespace UiBase
         return TextureButton(pos, std::move(t));
     }
 
-    void TextureButton::setTextureNormal(const std::string& path)
+    void TextureButton::setTextureNormal(const Texture& texture)
     {
-        normal = Texture::fromFile(path);
+        normal = texture;
         setSize(normal.getSize());
     }
 
-    void TextureButton::setTextureMouseOver(const std::string& path)
+    void TextureButton::setTextureMouseOver(const Texture& texture)
     {
         // TODO: size check
-        mouseOver.emplace(Texture::fromFile(path));
+        mouseOver = texture;
     }
 
     void TextureButton::clearTextureMouseOver()
@@ -34,9 +32,9 @@ namespace UiBase
         mouseOver.reset();
     }
 
-    void TextureButton::setTextureClicked(const std::string& path)
+    void TextureButton::setTextureClicked(const Texture& texture)
     {
-        clicked.emplace(Texture::fromFile(path));
+        clicked = texture;
     }
 
     void TextureButton::clearTextureClicked()
@@ -46,38 +44,22 @@ namespace UiBase
 
     const Texture& TextureButton::render() const
     {
-        const Texture* texture;
-        switch (getMouseButtonState())
+        if (hasMouseOver())
         {
-            case MouseButtonState::Normal:
+            if (isClicked())
+            {
+                if (clicked.has_value())
                 {
-                    PixelCoordinates mousePos;
-                    PixelCoordinates upperLeft = this->getPosition();
-                    PixelCoordinates lowerRight = this->getPosition() + this->getSize() - PixelCoordinates{1,1};
-                    SDL_GetMouseState(&mousePos.x, &mousePos.y);
-
-                    if (isWithin(mousePos, upperLeft, lowerRight))
-                    {
-                        // *INDENT-OFF*
-                        if (mouseOver.has_value())  {texture = &*mouseOver;}
-                        else                        {texture = &normal;}
-                        // *INDENT-ON*
-                    }
-                    else
-                    {
-                        texture = &normal;
-                    }
+                    return clicked.value();
                 }
-                break;
-            case MouseButtonState::Clicked:
-            case MouseButtonState::Dragged:
-                // *INDENT-OFF*
-                if (clicked.has_value())    {texture = &*clicked;}
-                else                        {texture = &normal;}
-                // *INDENT-ON*
-                break;
+            }
+            if (mouseOver.has_value())
+            {
+                return mouseOver.value();
+            }
         }
 
-        return *texture;
+        return normal;
+
     }
 }

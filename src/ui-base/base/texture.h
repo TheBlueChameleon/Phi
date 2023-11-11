@@ -7,9 +7,11 @@
 
 #include "base/coordinates/coordinate.h"
 
+#include "runtimeenvironmentuser.h"
+
 namespace UiBase
 {
-    class Texture
+    class Texture : RuntimeEnvironmentUser
     {
         private:
             SDL_Texture* texture = nullptr;
@@ -23,7 +25,7 @@ namespace UiBase
             Texture(Texture&& other);
             ~Texture();
 
-            Texture& operator=(const Texture& other) = default;
+            Texture& operator=(const Texture& other);
             Texture& operator=(Texture&& other) = default;
 
             static Texture fromFile(const std::string& path);

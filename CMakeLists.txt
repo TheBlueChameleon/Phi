@@ -109,18 +109,19 @@ endif()
 # ............................................................................ #
 
 add_library(Phi-uibase STATIC
-    src/ui-base/uibase.h
+    src/ui-base/ui-base.h
 
-    src/ui-base/globals.h src/ui-base/globals.cpp
-    src/ui-base/sdlbase.h src/ui-base/sdlbase.cpp
-    src/ui-base/texture.h src/ui-base/texture.cpp
-    src/ui-base/surface.h src/ui-base/surface.cpp
+    src/ui-base/base/callbacks.h
+    src/ui-base/base/defaulteventdispatcher.h src/ui-base/base/defaulteventdispatcher.cpp
+    src/ui-base/base/eventdispatcher.h
+    src/ui-base/base/runtimeenvironment.h src/ui-base/base/runtimeenvironment.cpp
+    src/ui-base/base/runtimeenvironmentuser.h src/ui-base/base/runtimeenvironmentuser.cpp
+    src/ui-base/base/texture.h src/ui-base/base/texture.cpp
+    src/ui-base/base/surface.h src/ui-base/base/surface.cpp
 
     src/ui-base/widgets/widget.h
-    src/ui-base/widgets/basewidget.h src/ui-base/widgets/basewidget.cpp
-    src/ui-base/widgets/callbacks.h
-    src/ui-base/widgets/mouseinteractor.h
-    src/ui-base/widgets/basemouseinteractor.h src/ui-base/widgets/basemouseinteractor.cpp
+    src/ui-base/widgets/impl/basewidget.h src/ui-base/widgets/impl/basewidget.cpp
+
     src/ui-base/widgets/dragsubstitute.h src/ui-base/widgets/dragsubstitute.cpp
     src/ui-base/widgets/texturebutton.h src/ui-base/widgets/texturebutton.cpp
 )

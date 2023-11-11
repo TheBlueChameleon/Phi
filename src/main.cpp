@@ -2,7 +2,7 @@
 
 #include "base/base.h"
 #include "physics/physics.h"
-#include "ui-base/uibase.h"
+#include "ui-base/ui-base.h"
 
 void show_physics()
 {
@@ -26,17 +26,26 @@ void show_physics()
 
 void show_uibase()
 {
-    using namespace UiBase;
     using namespace Base;
+    using namespace UiBase;
 
-    initUI();
+    auto& rte = RuntimeEnvironment::getInstance();
+    std::cout << "RTE instantiated at " << &rte << std::endl;
     TextureButton b = TextureButton::fromFile(PixelCoordinates{150,50}, "res/btn_blue.png");
-    b.setTextureClicked("res/btn_red.png");
-    b.setTextureMouseOver("res/btn_green.png");
+    b.setTextureClicked(Texture::fromFile("res/btn_red.png"));
+    b.setTextureMouseOver(Texture::fromFile("res/btn_green.png"));
+    b.makeDragDropCapable();
+    TextureButton c = TextureButton::fromFile(PixelCoordinates{350,50}, "res/btn_blue.png");
+    c.setEventHandler(Callbacks::Clicked, [](const SDL_Event& e)
+    {
+        std::cout << "callback triggered" << std::endl;
+    });
+    std::cout << "button instantiated" << std::endl;
+    std::cout << "  " << b.getSize().to_string() << std::endl;
 
-    std::cout << "button = " << &b << std::endl;
+    std::cout << "passing to mainloop" << std::endl;
 
-    uiMainloop();
+    rte.mainloop();
 }
 
 int main()

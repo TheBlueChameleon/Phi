@@ -5,7 +5,7 @@ using namespace std::string_literals;
 #include "base/base.h"
 
 #define SDL_PRIVATE
-#include "uibase.h"
+#include "texture.h"
 
 using namespace Base;
 
@@ -28,8 +28,8 @@ namespace UiBase
         size(size)
     {
         // TODO sanity check on size
-        texture = SDL_CreateTexture(renderer,
-                                    SDL_GetWindowPixelFormat(window) /*SDL_PIXELFORMAT_RGBA8888*/,
+        texture = SDL_CreateTexture(rte.getRenderer(),
+                                    SDL_GetWindowPixelFormat(rte.getWindow()) /*SDL_PIXELFORMAT_RGBA8888*/,
                                     access,
                                     size.x, size.y);
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
@@ -39,9 +39,9 @@ namespace UiBase
         Texture(other.getSize(), SDL_TEXTUREACCESS_TARGET)
     {
         // TODO handle return value = error code
-        SDL_SetRenderTarget(renderer, this->texture);
-        SDL_RenderCopy(renderer, other.texture, nullptr, nullptr);
-        SDL_SetRenderTarget(renderer, nullptr);  // set back to screen
+        SDL_SetRenderTarget(rte.getRenderer(), this->texture);
+        SDL_RenderCopy(rte.getRenderer(), other.texture, nullptr, nullptr);
+        SDL_SetRenderTarget(rte.getRenderer(), nullptr);  // set back to screen
     }
 
     Texture::Texture(Texture&& other) :
@@ -61,6 +61,14 @@ namespace UiBase
         texture = nullptr;
     }
 
+    Texture& Texture::operator=(const Texture& other)
+    {
+        // TODO
+        throw std::runtime_error("not implemented: copy assignment for Texture");
+
+        return *this;
+    }
+
     Texture Texture::fromFile(const std::string& path)
     {
         SDL_Surface* loadedSurface = IMG_Load(path.c_str());
@@ -70,14 +78,13 @@ namespace UiBase
                            "SDL_image Error: "s +IMG_GetError());
         }
 
-        SDL_Texture* newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        SDL_Texture* newTexture = SDL_CreateTextureFromSurface(RuntimeEnvironment::getInstance().getRenderer(), loadedSurface);
         SDL_FreeSurface(loadedSurface);
         if (newTexture == NULL)
         {
             throw SdlError("Unable to create texture from '"s + path + "'\n"
                            "SDL_image Error: "s +IMG_GetError());
         }
-
         return Texture(newTexture);
     }
 
@@ -100,6 +107,6 @@ namespace UiBase
     void Texture::renderAt(PixelCoordinates upperLeft) const
     {
         SDL_Rect rect = {upperLeft.x, upperLeft.y, size.x, size.y};
-        SDL_RenderCopy(renderer, texture, NULL, &rect);
+        SDL_RenderCopy(rte.getRenderer(), texture, NULL, &rect);
     }
 }

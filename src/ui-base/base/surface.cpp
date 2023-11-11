@@ -9,7 +9,6 @@ using namespace std::string_literals;
 
 #include "surface.h"
 #define SDL_PRIVATE
-#include "globals.h"
 
 using namespace Base;
 namespace UiBase
@@ -21,7 +20,7 @@ namespace UiBase
         surface = SDL_CreateRGBSurfaceWithFormat(
                       0,
                       size.x, size.y, 32,
-                      SDL_GetWindowSurface(window)->format->format
+                      SDL_GetWindowSurface(rte.getWindow())->format->format
                   );
     }
 
@@ -47,7 +46,7 @@ namespace UiBase
                            "SDL_image Error: "s +IMG_GetError());
         }
 
-        SDL_Surface* optimizedSurface = SDL_ConvertSurface(surface, SDL_GetWindowSurface(window)->format, 0);
+        SDL_Surface* optimizedSurface = SDL_ConvertSurface(surface, SDL_GetWindowSurface(RuntimeEnvironment::getInstance().getWindow())->format, 0);
         if (optimizedSurface == NULL)
         {
             throw SdlError("Unable to optimize image '"s + path.c_str() + "'\nSDL Error: \n"s + SDL_GetError());
@@ -58,7 +57,7 @@ namespace UiBase
 
     Texture Surface::toTexture() const
     {
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(rte.getRenderer(), surface);
         if (texture == NULL)
         {
             throw SdlError("Unable to create texture \n"

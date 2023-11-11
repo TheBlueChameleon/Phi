@@ -1,28 +1,26 @@
-#include <cstdlib>
-#include <concepts>
 #include <iostream>
-#include <string>
-using namespace std::string_literals;
 #include <ranges>
+#include <string>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+using namespace std::string_literals;
 
-#include "base/base.h"
-#include "base/coordinates/coordinate.h"
+#include "base/errors.h"
 
-#define SDL_PRIVATE
 #define UIBASE_PRIVATE
-#include "uibase.h"
-#include "ui-base/widgets/texturebutton.h"
+#include "runtimeenvironment.h"
+#include "ui-base/widgets/widget.h"
+#include "ui-base/base/defaulteventdispatcher.h"
 
 using namespace Base;
+
 namespace UiBase
 {
-    void initUI(bool autoCallQuitUI)
+    RuntimeEnvironment::RuntimeEnvironment() {}
+
+    void RuntimeEnvironment::init()
     {
+        initCalled = true;
+
         if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
         {
             throw SdlError("SDL could not initialize! SDL Error:\n"s + SDL_GetError());
@@ -34,18 +32,17 @@ namespace UiBase
         }
 
         window = SDL_CreateWindow(
-                     WINDOW_TITLE,
+                     windowTitle,
                      SDL_WINDOWPOS_UNDEFINED,
                      SDL_WINDOWPOS_UNDEFINED,
-                     SCREEN_WIDTH,
-                     SCREEN_HEIGHT,
+                     screenWidth,
+                     screenHeight,
                      SDL_WINDOW_SHOWN
                  );
         if (window == NULL)
         {
             throw SdlError("Window could not be created! SDL Error:\n"s + SDL_GetError());
         }
-
 
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         if (renderer == NULL)
@@ -61,13 +58,22 @@ namespace UiBase
             throw SdlError("SDL_image could not initialize! SDL_image Error:\n"s + IMG_GetError());
         }
 
-        if (autoCallQuitUI)
-        {
-            std::atexit(quitUI);
-        }
+        eventDispatcher = new DefaultEventDispatcher();
     }
 
-    void quitUI()
+    RuntimeEnvironment& RuntimeEnvironment::getInstance()
+    {
+        static RuntimeEnvironment instance;
+
+        if (!instance.initCalled)
+        {
+            std::cout << "call from getInstance" << std::endl;
+            instance.init();
+        }
+        return instance;
+    }
+
+    RuntimeEnvironment::~RuntimeEnvironment()
     {
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
@@ -76,11 +82,59 @@ namespace UiBase
 
         IMG_Quit();
         SDL_Quit();
+
+        delete eventDispatcher;
+
+        initCalled = false;
     }
 
-    // ====================================================================== //
+    SDL_Window* RuntimeEnvironment::getWindow() const
+    {
+        return window;
+    }
 
-    void loadFont(const std::string& path, int size, const std::string& ID)
+    SDL_Renderer* RuntimeEnvironment::getRenderer() const
+    {
+        return renderer;
+    }
+
+    EventDispatcher& RuntimeEnvironment::getEventDispatcher()
+    {
+        return *eventDispatcher;
+    }
+
+    void RuntimeEnvironment::replaceEventDispatcher(EventDispatcher* newEventDispatcher)
+    {
+        delete eventDispatcher;
+        eventDispatcher = newEventDispatcher;
+    }
+
+    std::vector<Widget*>& RuntimeEnvironment::getWidgets()
+    {
+        return widgets;
+    }
+
+    std::unordered_map<std::string, TTF_Font*>& RuntimeEnvironment::getFonts()
+    {
+        return fonts;
+    }
+
+    int RuntimeEnvironment::getScreenWidth() const
+    {
+        return screenWidth;
+    }
+
+    int RuntimeEnvironment::getScrenHeight() const
+    {
+        return screenHeight;
+    }
+
+    const char* RuntimeEnvironment::getWindowTitle() const
+    {
+        return windowTitle;
+    }
+
+    void RuntimeEnvironment::loadFont(const std::string& path, int size, const std::string& ID)
     {
         if (fonts.contains(ID))
         {
@@ -88,14 +142,12 @@ namespace UiBase
         }
 
         auto fontPtr = TTF_OpenFont(path.c_str(), size);
-
         if (!fontPtr)
         {
             throw SdlError("Could not load font '"s + path + "'");
         }
 
         auto [it, success] = fonts.emplace(ID, fontPtr);
-
         if (!success)
         {
             TTF_CloseFont(fontPtr);
@@ -103,24 +155,7 @@ namespace UiBase
         }
     }
 
-    // ====================================================================== //
-
-    using MouseInteractorMethod = void (MouseInteractor::*)(const SDL_Event&);
-
-    using MotionOffset = decltype(&SDL_Event::motion);
-    using ButtonOffset = decltype(&SDL_Event::button);
-    using WheelOffset = decltype(&SDL_Event::wheel);
-
-    template<typename T>
-    concept MouseEventOffset =
-        std::is_convertible_v<T, MotionOffset> ||
-        std::is_convertible_v<T, ButtonOffset> ||
-        std::is_convertible_v<T, WheelOffset>;
-
-    void dispatch_mouseEvent(const SDL_Event& e, MouseInteractorMethod method, MouseEventOffset auto offset);
-
-
-    void uiMainloop()
+    void RuntimeEnvironment::mainloop()
     {
         do
         {
@@ -128,10 +163,10 @@ namespace UiBase
             render_widgets();
             SDL_RenderPresent(renderer);
         }
-        while (dispatch_events());
+        while (eventDispatcher->dispatchEvents());
     }
 
-    void render_widgets()
+    void RuntimeEnvironment::render_widgets()
     {
         for (auto widget : std::ranges::filter_view(widgets, &Widget::isVisible))
         {
@@ -141,47 +176,7 @@ namespace UiBase
         }
     }
 
-    bool dispatch_events()
-    {
-        SDL_Event e;
-        while (SDL_PollEvent(&e) != 0)
-        {
-            switch (e.type)
-            {
-                case SDL_MOUSEMOTION:
-                    dispatch_mouseEvent(e, &MouseInteractor::onMouseMotion, &SDL_Event::motion);
-                    break;
-
-                case SDL_MOUSEBUTTONDOWN:
-                case SDL_MOUSEBUTTONUP:
-                    dispatch_mouseEvent(e, &MouseInteractor::onMouseButton, &SDL_Event::motion);
-                    break;
-
-                case SDL_MOUSEWHEEL:
-                    dispatch_mouseEvent(e, &MouseInteractor::onMouseWheel, &SDL_Event::motion);
-                    break;
-
-                case SDL_QUIT:
-                case SDL_APP_TERMINATING:
-                    return false;
-            }
-        }
-
-        return true;
-    }
-
-    void dispatch_mouseEvent(const SDL_Event& e, MouseInteractorMethod method, MouseEventOffset auto offset)
-    {
-        PixelCoordinates pos = {(e.*offset).x, (e.*offset).y};
-        Widget* widget = findWidgetAt(pos);
-        MouseInteractor* miWidget = dynamic_cast<MouseInteractor*>(widget);
-        if (miWidget)
-        {
-            (miWidget->*method)(e);
-        }
-    }
-
-    Widget* findWidgetAt(Base::PixelCoordinates pos)
+    Widget* RuntimeEnvironment::findWidgetAt(Base::PixelCoordinates pos)
     {
         for (auto widget : std::views::reverse(widgets) | std::views::filter(&Widget::isVisible) | std::views::filter(&Widget::isActive))
         {
@@ -195,6 +190,4 @@ namespace UiBase
 
         return nullptr;
     }
-
-    // ====================================================================== //
 }

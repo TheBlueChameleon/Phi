@@ -9,7 +9,7 @@
 
 namespace UiBase
 {
-    class Surface
+    class Surface : RuntimeEnvironmentUser
     {
         private:
             SDL_Surface* surface = nullptr;

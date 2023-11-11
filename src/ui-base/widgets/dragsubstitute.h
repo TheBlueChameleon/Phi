@@ -1,14 +1,12 @@
 #ifndef DRAGSUBSTITUTE_H
 #define DRAGSUBSTITUTE_H
 
-#include "basemouseinteractor.h"
-#include "basewidget.h"
+#include "ui-base/widgets/impl/basewidget.h"
 
 namespace UiBase
 {
     class DragSubstitute :
-        public BaseWidget,
-        public BaseMouseInteractor
+        public BaseWidget
     {
         private:
             Widget& original;
