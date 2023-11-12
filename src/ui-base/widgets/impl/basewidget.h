@@ -45,10 +45,10 @@ namespace UiBase
             bool hasMouseOver() const;
             bool isClicked() const;
 
-            Base::PixelCoordinates getPosition() const;
-            void setPosition(const Base::PixelCoordinates& pos);
-            Base::PixelCoordinates getSize() const;
-            void setSize(const Base::PixelCoordinates& size);
+            const Base::PixelCoordinates&   getPosition() const;
+            void                            setPosition(const Base::PixelCoordinates& pos);
+            const Base::PixelCoordinates&   getSize() const;
+            void                            setSize(const Base::PixelCoordinates& size);
 
             void onMouseButton(const SDL_Event& e);
             void onLostFocus(const SDL_Event& e);

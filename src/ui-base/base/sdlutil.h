@@ -31,5 +31,9 @@ namespace SdlColors
     dark_purple = {128,   0, 128, 255},
     dark_cyan   = {  0, 128, 128, 255},
     transparent = {  0,   0,   0,   0};
+
 };
+
+bool operator==(const SDL_Color& lhs, const SDL_Color& rhs);
+bool operator!=(const SDL_Color& lhs, const SDL_Color& rhs);
 #endif // SDLUTIL_H

@@ -111,6 +111,7 @@ endif()
 add_library(Phi-uibase STATIC
     src/ui-base/ui-base.h
 
+    src/ui-base/base/alignment.h
     src/ui-base/base/callbacks.h
     src/ui-base/base/eventdispatcher.h
     src/ui-base/base/defaulteventdispatcher.h src/ui-base/base/defaulteventdispatcher.cpp
@@ -124,6 +125,7 @@ add_library(Phi-uibase STATIC
     src/ui-base/widgets/impl/basewidget.h       src/ui-base/widgets/impl/basewidget.cpp
     src/ui-base/widgets/impl/dragsubstitute.h   src/ui-base/widgets/impl/dragsubstitute.cpp
     src/ui-base/widgets/impl/texturebutton.h    src/ui-base/widgets/impl/texturebutton.cpp
+    src/ui-base/widgets/impl/texturelabel.h     src/ui-base/widgets/impl/texturelabel.cpp
 )
 
 target_include_directories(Phi-uibase PUBLIC

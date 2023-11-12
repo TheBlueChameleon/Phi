@@ -6,6 +6,7 @@
 #define SDL_PRIVATE
 #include "texture.h"
 #include "sdlutil.h"
+#include "ui-base/base/sdlutil.h"
 
 using namespace Base;
 using namespace SdlUtil;
@@ -20,19 +21,28 @@ namespace UiBase
         this->size = size;
     }
 
-    Texture::Texture(const PixelCoordinates& size, int access) :
+    Texture::Texture(const PixelCoordinates& size, int access, const SDL_Color& color) :
         size(size)
     {
         if (size.x <= 0 || size.y <= 0)
         {
             throw DimensionError("Attempting to construct Texture of size " + size.to_string());
         }
-        texture = SDL_CreateTexture(rte.getRenderer(),
+        SDL_Renderer* renderer = rte.getRenderer();
+        texture = SDL_CreateTexture(renderer,
                                     /*SDL_GetWindowPixelFormat(rte.getWindow())*/ SDL_PIXELFORMAT_RGBA8888,
                                     access,
                                     size.x, size.y);
         throwSdlErrorIfErrCode(SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND), "Texture could not be made blendable");
         throwSdlErrorIfNullptr(texture, "Texture could not be created");
+
+        if (color != SdlColors::black) // black is the default state of a texture
+        {
+            throwSdlErrorIfErrCode(SDL_SetRenderTarget(renderer, texture), "Could not set render target to texture");
+            throwSdlErrorIfErrCode(SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a), "Could not set renderer draw color");
+            throwSdlErrorIfErrCode(SDL_RenderFillRect(renderer, NULL), "Could not render rectangle");
+            rte.resetRenderer();
+        }
     }
 
     Texture::Texture(const Texture& other)
@@ -59,7 +69,6 @@ namespace UiBase
         *this = Texture(other.getSize(), SDL_TEXTUREACCESS_TARGET);
         throwSdlErrorIfErrCode(SDL_SetRenderTarget(rte.getRenderer(), this->texture), "Could not set render target to texture");
         throwSdlErrorIfErrCode(SDL_RenderCopy(rte.getRenderer(), other.texture, nullptr, nullptr), "Could not copy texture");
-        throwSdlErrorIfErrCode(SDL_SetRenderTarget(rte.getRenderer(), nullptr), "Could not set render target to screen");
 
         return *this;
     }
@@ -115,7 +124,6 @@ namespace UiBase
         SDL_Rect destRect = {upperLeft.x, upperLeft.y, size.x, size.y};
         throwSdlErrorIfErrCode(SDL_SetRenderTarget(rte.getRenderer(), target.texture), "Could not set render target to texture");
         throwSdlErrorIfErrCode(SDL_RenderCopy(rte.getRenderer(), texture, nullptr, &destRect), "Could not copy texture");
-        throwSdlErrorIfErrCode(SDL_SetRenderTarget(rte.getRenderer(), nullptr), "Could not set render target to screen");
     }
 
     void Texture::renderOntoCentered(Texture& target) const

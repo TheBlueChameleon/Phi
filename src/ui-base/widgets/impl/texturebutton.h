@@ -5,8 +5,8 @@
 
 #include "base/coordinates/coordinate.h"
 
+#include "basewidget.h"
 #include "ui-base/base/texture.h"
-#include "ui-base/widgets/impl/basewidget.h"
 
 namespace UiBase
 {
@@ -22,8 +22,9 @@ namespace UiBase
             void clearIfNonMatchingSize();
 
         public:
-            TextureButton(Base::PixelCoordinates pos, Texture&& texture);
-            static TextureButton fromFile(Base::PixelCoordinates pos, const std::string& path);
+            TextureButton(const Base::PixelCoordinates& pos, const Texture& texture);
+            TextureButton(const Base::PixelCoordinates& pos, Texture&& texture);
+            static TextureButton fromFile(const Base::PixelCoordinates& pos, const std::string& path);
 
             void setTextureNormal(const Texture& texture);
             void setTextureNormal(Texture&& texture);
@@ -37,6 +38,7 @@ namespace UiBase
             // Widget interface
             virtual const Texture& render() const;
 
+            void setSize(const Base::PixelCoordinates& size);
     };
 }
 

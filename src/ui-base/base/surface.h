@@ -28,6 +28,7 @@ namespace UiBase
 
             static Surface fromFile(const std::string& path);
             static Surface fromText(const std::string& text, const std::string& fontID, const SDL_Color fontColor = SdlColors::black, Uint32 wrapLength = 0);
+            static Surface fromText(const std::string& text, TTF_Font *font, const SDL_Color fontColor = SdlColors::black, Uint32 wrapLength = 0);
 
             SDL_Surface* expose();
             Base::PixelCoordinates getSize() const;

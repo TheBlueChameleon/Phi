@@ -39,9 +39,9 @@ namespace UiBase
         virtual const std::function<void(const SDL_Event&)>& getEventHandler(const Callbacks id) = 0;
         virtual void setEventHandler(const Callbacks id, const std::function<void(const SDL_Event&)>& callback) = 0;
 
-        virtual Base::PixelCoordinates getPosition() const = 0;
+        virtual const Base::PixelCoordinates& getPosition() const = 0;
         virtual void setPosition(const Base::PixelCoordinates& pos) = 0;
-        virtual Base::PixelCoordinates getSize() const = 0;
+        virtual const Base::PixelCoordinates& getSize() const = 0;
         virtual void setSize(const Base::PixelCoordinates& pos) = 0;
 
         virtual const Texture& render() const = 0;

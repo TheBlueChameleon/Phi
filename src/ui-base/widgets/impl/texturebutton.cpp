@@ -5,12 +5,17 @@
 using namespace Base;
 namespace UiBase
 {
-    TextureButton::TextureButton(PixelCoordinates pos, Texture&& texture) :
+    TextureButton::TextureButton(const PixelCoordinates& pos, const Texture& texture) :
+        BaseWidget(pos, texture.getSize()),
+        normal(texture)
+    {}
+
+    TextureButton::TextureButton(const PixelCoordinates& pos, Texture&& texture) :
         BaseWidget(pos, texture.getSize()),
         normal(std::move(texture))
     {}
 
-    TextureButton TextureButton::fromFile(PixelCoordinates pos, const std::string& path)
+    TextureButton TextureButton::fromFile(const PixelCoordinates& pos, const std::string& path)
     {
         return TextureButton(pos, Texture::fromFile(path));
     }
@@ -18,14 +23,14 @@ namespace UiBase
     void TextureButton::setTextureNormal(const Texture& texture)
     {
         normal = texture;
-        setSize(normal.getSize());
+        BaseWidget::setSize(normal.getSize());
         clearIfNonMatchingSize();
     }
 
     void TextureButton::setTextureNormal(Texture&& texture)
     {
         normal = std::move(texture);
-        setSize(normal.getSize());
+        BaseWidget::setSize(normal.getSize());
         clearIfNonMatchingSize();
     }
 
@@ -103,5 +108,10 @@ namespace UiBase
 
         return normal;
 
+    }
+
+    void TextureButton::setSize(const Base::PixelCoordinates& size)
+    {
+        throw AccessRightsError("Cannot Resize TextureButton -- replace Texture instead");
     }
 }

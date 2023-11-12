@@ -52,10 +52,10 @@ namespace UiBase
             EventDispatcher& getEventDispatcher();
             void replaceEventDispatcher(EventDispatcher* newEventDispatcher);
 
-#ifdef UIBASE_PRIVATE
+            //#ifdef UIBASE_PRIVATE
             std::vector<Widget*>& getWidgets();
             std::unordered_map<std::string, TTF_Font*>& getFonts();
-#endif
+            //#endif
 
             int getScreenWidth() const;
             int getScrenHeight() const;
@@ -65,8 +65,10 @@ namespace UiBase
             void showWindow();
             bool isWindowShown() const;
 
-            void loadFont(const std::string& path, int size, const std::string& ID);
+            void loadFont(const std::string& ID, const std::string& path, int size, const int fontStyle = TTF_STYLE_NORMAL);
             TTF_Font* getFont(const std::string& ID) const;
+            TTF_Font* getFontOrThrow(const std::string& ID) const;
+            bool fontExists(const std::string& ID) const;
 
             void mainloop();
             void render_widgets();

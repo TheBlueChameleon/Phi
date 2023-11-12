@@ -93,10 +93,13 @@ namespace UiBase
 
     Surface Surface::fromText(const std::string& text, const std::string& fontID, const SDL_Color fontColor, Uint32 wrapLength)
     {
-        const auto font = RuntimeEnvironment::getInstance().getFont(fontID);
-        const auto surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), fontColor, wrapLength);
+        const auto font = RuntimeEnvironment::getInstance().getFontOrThrow(fontID);
+        return fromText(text, font, fontColor, wrapLength);
+    }
 
-        return Surface(surface);
+    Surface Surface::fromText(const std::string& text, TTF_Font* font, const SDL_Color fontColor, Uint32 wrapLength)
+    {
+        return Surface(TTF_RenderText_Blended_Wrapped(font, text.c_str(), fontColor, wrapLength));
     }
 
     SDL_Surface* Surface::expose()
@@ -135,17 +138,14 @@ namespace UiBase
         SDL_Texture* directTexture = SDL_CreateTextureFromSurface(rte.getRenderer(), surface);
         throwSdlErrorIfNullptr(directTexture, "Unable to create texture");
 
-        if (access !=  SDL_TEXTUREACCESS_STATIC)
+        if (access != SDL_TEXTUREACCESS_STATIC)
         {
             SDL_Renderer* renderer = rte.getRenderer();
-            Texture modifiable(size, access);
+            Texture modifiable(size, access, SdlColors::transparent);
             SDL_Texture* modifiableTexture = modifiable.expose();
 
             throwSdlErrorIfErrCode(SDL_SetRenderTarget(renderer, modifiableTexture), "Could not set render target to texture");
-            throwSdlErrorIfErrCode(SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0), "Could not set renderer draw color");
-            throwSdlErrorIfErrCode(SDL_RenderFillRect(renderer, NULL), "Could not render rectangle");
             throwSdlErrorIfErrCode(SDL_RenderCopy(renderer, directTexture, nullptr, nullptr), "Could not copy texture");
-            rte.resetRenderer();
 
             return modifiable;
         }

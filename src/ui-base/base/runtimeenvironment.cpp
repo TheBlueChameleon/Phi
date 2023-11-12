@@ -10,7 +10,10 @@
 #include "ui-base/widgets/widget.h"
 #include "ui-base/base/defaulteventdispatcher.h"
 
+// TODO remove debug stuff
 #include "ui-base/base/surface.h"
+#include <ui-base/widgets/impl/texturelabel.h>
+#include "ui-base/widgets/impl/texturebutton.h"
 
 using namespace Base;
 using namespace SdlUtil;
@@ -90,6 +93,7 @@ namespace UiBase
 
     void RuntimeEnvironment::resetRenderer()
     {
+        throwSdlErrorIfErrCode(SDL_SetRenderTarget(renderer, nullptr), "Could not set render target to screen");
         throwSdlErrorIfErrCode(SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF), "Could not set draw color");
         throwSdlErrorIfErrCode(SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND), "Could not set blend mode");
     }
@@ -145,7 +149,7 @@ namespace UiBase
         return SDL_GetWindowFlags(window) & SDL_WINDOW_SHOWN;
     }
 
-    void RuntimeEnvironment::loadFont(const std::string& path, int size, const std::string& ID)
+    void RuntimeEnvironment::loadFont(const std::string& ID, const std::string& path, int size, const int fontStyle)
     {
         if (fonts.contains(ID))
         {
@@ -158,6 +162,11 @@ namespace UiBase
             throw SdlError("Could not load font '" + path + "'");
         }
 
+        if (fontStyle != TTF_STYLE_NORMAL)
+        {
+            TTF_SetFontStyle(fontPtr, fontStyle);
+        }
+
         auto [it, success] = fonts.emplace(ID, fontPtr);
         if (!success)
         {
@@ -168,34 +177,45 @@ namespace UiBase
 
     TTF_Font* RuntimeEnvironment::getFont(const std::string& ID) const
     {
-        return fonts.at(ID);
+        // fonts[ID] would implicitly construct a new element if no key ID exists, thus this walkaround
+
+        auto fontIterator = fonts.find(ID);
+        if (fontIterator == fonts.end())
+        {
+            return nullptr;
+        }
+        else
+        {
+            return fontIterator->second;
+        }
+    }
+
+    TTF_Font* RuntimeEnvironment::getFontOrThrow(const std::string& ID) const
+    {
+        auto fontIterator = fonts.find(ID);
+        if (fontIterator == fonts.end())
+        {
+            throw KeyError("No font with key '" + ID + "' was registered");
+        }
+        else
+        {
+            return fontIterator->second;
+        }
+    }
+
+    bool RuntimeEnvironment::fontExists(const std::string& ID) const
+    {
+        return fonts.contains(ID);
     }
 
     void RuntimeEnvironment::mainloop()
     {
-        Surface rainbow({256, 50}, 0);
-        for (auto y = 0; y < 50; ++y)
-        {
-            for (auto x = 0; x < 256; ++x)
-            {
-                rainbow.pixelAt(x, y) = (x << 16) + ((x & 0xFE) << 7) + ((x & 0xFC) >> 1);
-            }
-        }
-        Texture fooThyBars = Surface::fromText("foo thy bars", "mono16", SdlColors::green).toTexture();
-        Texture flow = rainbow.toTexture();
-        Texture direct = Surface::fromText("foo thy bars", "mono16").toTexture(SDL_TEXTUREACCESS_STATIC);
-        fooThyBars.renderOntoCentered(flow);
-
         do
         {
             resetRenderer();
             SDL_RenderClear(renderer);
+
             render_widgets();
-
-            flow.renderAt({200, 200});
-            fooThyBars.renderAt({200, 260});
-            direct.renderAt({200, 280});
-
             SDL_RenderPresent(renderer);
         }
         while (eventDispatcher->dispatchEvents());

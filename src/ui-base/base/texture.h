@@ -21,7 +21,7 @@ namespace UiBase
         public:
             Texture() = default;
             Texture(SDL_Texture* texture);
-            Texture(const Base::PixelCoordinates& size, int access = SDL_TEXTUREACCESS_TARGET);
+            Texture(const Base::PixelCoordinates& size, int access = SDL_TEXTUREACCESS_TARGET, const SDL_Color& color = SdlColors::transparent);
             Texture(const Texture& other);
             Texture(Texture&& other);
             ~Texture();

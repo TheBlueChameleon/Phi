@@ -9,15 +9,6 @@
 using namespace Base;
 namespace UiBase
 {
-    void BaseWidget::invokeOptionalCallback(const Callbacks id, const SDL_Event& event)
-    {
-        const auto callback = callbacks[id];
-        if (callback)
-        {
-            callback(event);
-        }
-    }
-
     BaseWidget::BaseWidget(const PixelCoordinates& position, const PixelCoordinates& size) :
         position(position), size(size)
     {
@@ -85,7 +76,7 @@ namespace UiBase
         return clicked;
     }
 
-    PixelCoordinates BaseWidget::getPosition() const
+    const PixelCoordinates& BaseWidget::getPosition() const
     {
         return position;
     }
@@ -95,7 +86,7 @@ namespace UiBase
         position = pos;
     }
 
-    PixelCoordinates BaseWidget::getSize() const
+    const PixelCoordinates& BaseWidget::getSize() const
     {
         return size;
     }
@@ -103,6 +94,15 @@ namespace UiBase
     void BaseWidget::setSize(const PixelCoordinates& newSize)
     {
         size = newSize;
+    }
+
+    void BaseWidget::invokeOptionalCallback(const Callbacks id, const SDL_Event& event)
+    {
+        const auto callback = callbacks[id];
+        if (callback)
+        {
+            callback(event);
+        }
     }
 
     void BaseWidget::onMouseButton(const SDL_Event& e)
