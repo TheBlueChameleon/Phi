@@ -18,7 +18,7 @@ namespace UiBase
             TTF_Font*   font;
             SDL_Color   color = SdlColors::black;
             HorizontalAlignment hAlignment = HorizontalAlignment::Left;
-            VerticalAlignment vAlignment   = VerticalAlignment::Top;
+            VerticalAlignment vAlignment   = VerticalAlignment::Center;
 
             std::optional<Texture> backdrop;
 

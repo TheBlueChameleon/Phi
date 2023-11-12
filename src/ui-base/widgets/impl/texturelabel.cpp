@@ -2,6 +2,7 @@
 
 #include "texturelabel.h"
 #include "ui-base/base/surface.h"
+#include "ui-base/base/util.h"
 
 using namespace Base;
 
@@ -130,7 +131,9 @@ namespace UiBase
         if (backdrop.has_value())
         {
             texture = backdrop.value();
-            textTexture.renderOntoCentered(texture);
+
+            PixelCoordinates renderPosition = getAlignedBoxCoordinate(texture.getSize(), textTexture.getSize(), hAlignment, vAlignment);
+            textTexture.renderOnto(texture, renderPosition);
         }
         else
         {

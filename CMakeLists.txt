@@ -120,6 +120,7 @@ add_library(Phi-uibase STATIC
     src/ui-base/base/texture.h src/ui-base/base/texture.cpp
     src/ui-base/base/sdlutil.h src/ui-base/base/sdlutil.cpp
     src/ui-base/base/surface.h src/ui-base/base/surface.cpp
+    src/ui-base/base/util.h src/ui-base/base/util.cpp
 
     src/ui-base/widgets/widget.h
     src/ui-base/widgets/impl/basewidget.h       src/ui-base/widgets/impl/basewidget.cpp

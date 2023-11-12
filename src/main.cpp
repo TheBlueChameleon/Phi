@@ -61,6 +61,8 @@ void show_uibase()
     lbl.suspendUpdateRendering();
     lbl.setText("foo thy bars");
     lbl.setColor(SdlColors::green);
+    //    lbl.setHAlignment(HorizontalAlignment::Right);
+    //    lbl.setVAlignment(VerticalAlignment::Bottom);
     lbl.setBackdrop(flow);
     lbl.resumeUpdateRendering();
 
