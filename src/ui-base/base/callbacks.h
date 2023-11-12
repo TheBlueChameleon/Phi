@@ -5,6 +5,8 @@ namespace UiBase
 {
     enum class Callbacks
     {
+        MouseMoved,
+        MouseWheel,
         MouseOver,
         Clicked,
         Dragged,

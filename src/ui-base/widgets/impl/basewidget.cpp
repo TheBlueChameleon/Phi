@@ -132,7 +132,10 @@ namespace UiBase
         std::cout << "got focus: " << this << std::endl;
     }
 
-    void BaseWidget::onMouseMotion(const SDL_Event& e) {}
+    void BaseWidget::onMouseMotion(const SDL_Event& e)
+    {
+        invokeOptionalCallback(Callbacks::MouseMoved, e);
+    }
 
     void BaseWidget::onLostMouseOver(const SDL_Event& e)
     {
@@ -159,7 +162,7 @@ namespace UiBase
 
     void BaseWidget::onMouseWheel(const SDL_Event& e)
     {
-
+        invokeOptionalCallback(Callbacks::MouseWheel, e);
     }
 
     const std::function<void (const SDL_Event&)>& BaseWidget::getEventHandler(const Callbacks id)

@@ -50,7 +50,6 @@ namespace UiBase
             Base::PixelCoordinates getSize() const;
             void setSize(const Base::PixelCoordinates& size);
 
-            // TODO: virtual?
             void onMouseButton(const SDL_Event& e);
             void onLostFocus(const SDL_Event& e);
             void onGainFocus(const SDL_Event& e);
